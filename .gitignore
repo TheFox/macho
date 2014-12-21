@@ -1,0 +1,8 @@
+composer.lock
+composer.phar
+build
+log
+pid
+releases
+vendor
+test_data

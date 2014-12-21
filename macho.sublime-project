@@ -1,0 +1,10 @@
+{
+	"folders":[
+		{
+			"path": ".",
+			"name": "MachO",
+			"folder_exclude_patterns": [ "log", "vendor" ],
+			"file_exclude_patterns": [ ]
+		}
+	]
+}
