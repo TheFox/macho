@@ -27,9 +27,15 @@ class BinaryCommand extends BasicCommand{
 	protected function configure(){
 		$this->setName('binary');
 		$this->setDescription('Show infos about a binary file.');
+		
 		$this->addOption('all', null, InputOption::VALUE_NONE, 'Print all informations.');
 		$this->addOption('magic', null, InputOption::VALUE_NONE, 'Prints the magic number.');
-		$this->addOption('cpu', null, InputOption::VALUE_NONE, 'Prints the magic number.');
+		$this->addOption('cpu', null, InputOption::VALUE_NONE, 'Prints the cpu.');
+		$this->addOption('filetype', null, InputOption::VALUE_NONE, 'Prints the filetype.');
+		$this->addOption('ncmds', null, InputOption::VALUE_NONE, 'Prints the ncmds.');
+		$this->addOption('sizeofcmds', null, InputOption::VALUE_NONE, 'Prints the sizeofcmds.');
+		$this->addOption('flags', null, InputOption::VALUE_NONE, 'Prints the flags.');
+		
 		$this->addArgument('path', InputArgument::REQUIRED, 'Path to the binary file.');
 	}
 	
@@ -49,7 +55,21 @@ class BinaryCommand extends BasicCommand{
 				$output->writeln('magic: '.$binary->getMagic());
 			}
 			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
-				$output->writeln('cpu: '.$binary->getCpu());
+				$abi64 = 0;
+				$abi64 = $binary->getCpuType() & CPU_TYPE_X86_64;
+				$output->writeln('cpu: '.$binary->getCpuType().' '.$binary->getCpuSubtype().' '.($abi64 ? '64' : '32').'-bit');
+			}
+			if($all || $input->hasOption('filetype') && $input->getOption('filetype')){
+				$output->writeln('filetype: '.$binary->getFileType());
+			}
+			if($all || $input->hasOption('ncmds') && $input->getOption('ncmds')){
+				$output->writeln('ncmds: '.$binary->getNCmds());
+			}
+			if($all || $input->hasOption('sizeofcmds') && $input->getOption('sizeofcmds')){
+				$output->writeln('sizeofcmds: '.$binary->getSizeOfCmds());
+			}
+			if($all || $input->hasOption('flags') && $input->getOption('flags')){
+				$output->writeln('flags: '.$binary->getFlags());
 			}
 		}
 		
