@@ -29,6 +29,7 @@ class BinaryCommand extends BasicCommand{
 		$this->setDescription('Show infos about a binary file.');
 		$this->addOption('all', null, InputOption::VALUE_NONE, 'Print all informations.');
 		$this->addOption('magic', null, InputOption::VALUE_NONE, 'Prints the magic number.');
+		$this->addOption('cpu', null, InputOption::VALUE_NONE, 'Prints the magic number.');
 		$this->addArgument('path', InputArgument::REQUIRED, 'Path to the binary file.');
 	}
 	
@@ -46,6 +47,9 @@ class BinaryCommand extends BasicCommand{
 			}
 			if($all || $input->hasOption('magic') && $input->getOption('magic')){
 				$output->writeln('magic: '.$binary->getMagic());
+			}
+			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
+				$output->writeln('cpu: '.$binary->getCpu());
 			}
 		}
 		

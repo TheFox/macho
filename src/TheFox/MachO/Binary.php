@@ -10,6 +10,7 @@ class Binary{
 	
 	private $path;
 	private $magic;
+	private $cpu;
 	
 	public function __construct($path){
 		$this->path = $path;
@@ -33,6 +34,10 @@ class Binary{
 		return $this->magic;
 	}
 	
+	public function getCpu(){
+		return $this->cpu;
+	}
+	
 	private function readHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
@@ -47,6 +52,10 @@ class Binary{
 			}
 			$this->magic = $data[1];
 			
+			$data = fread($fh, 1);
+			$data = unpack('H*', $data);
+			#\Doctrine\Common\Util\Debug::dump($data);
+			$this->cpu = (int)$data[1];
 			fclose($fh);
 		}
 	}
