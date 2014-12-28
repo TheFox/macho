@@ -36,13 +36,11 @@ class Binary{
 	private function readHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
-			$magic = fread($fh, 4);
+			$data = fread($fh, 4);
+			#\Doctrine\Common\Util\Debug::dump(unpack('H*', $data));
+			#\Doctrine\Common\Util\Debug::dump(unpack('h*', $data));
 			
-			#Bin::debugData($magic);
-			
-			#\Doctrine\Common\Util\Debug::dump(unpack('H*', $magic));
-			
-			$data = unpack('H*', $magic);
+			$data = unpack('H*', $data);
 			if($data[1] != 'cffaedfe'){
 				fclose($fh);
 				throw new RuntimeException('Unknown file type.', 3);
