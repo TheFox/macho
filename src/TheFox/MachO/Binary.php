@@ -77,6 +77,8 @@ class Binary{
 	private function readHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
+			$this->printPos($fh);
+			
 			$data = fread($fh, 4);
 			#\Doctrine\Common\Util\Debug::dump(unpack('H*', $data));
 			#\Doctrine\Common\Util\Debug::dump(unpack('h*', $data));
@@ -166,6 +168,10 @@ class Binary{
 			
 			fclose($fh);
 		}
+	}
+	
+	private function printPos($fh){
+		print '-> pos: '.dechex(ftell($fh)).PHP_EOL;
 	}
 	
 }
