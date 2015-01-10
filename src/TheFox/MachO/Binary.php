@@ -134,30 +134,136 @@ class Binary{
 				$data = fread($fh, 4);
 			}
 			
-			$cmdsData = fread($fh, $this->sizeOfCmds);
+			$this->printPos($fh);
+			
+			#$cmdsData = fread($fh, $this->sizeOfCmds);
 			#$data = unpack('H*', $data);
-			#\Doctrine\Common\Util\Debug::dump($data);
+			#\Doctrine\Common\Util\Debug::dump($cmdsData);
 			for($cmd = 0; $cmd < $this->nCmds; $cmd++){
+			#for($cmd = 0; $cmd < 2; $cmd++){
+				$this->printPos($fh);
+				
+				print '-> cmd'.PHP_EOL;
+				
+				$cmdsData = fread($fh, 4); // cmd
+				#print '  -> type: '.$cmdsData.PHP_EOL;
 				$type = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 				$type = $type[1];
-				$cmdsData = substr($cmdsData, 4);
 				
+				$cmdsData = fread($fh, 4); // cmdsize
+				#print '  -> len: '.$cmdsData.PHP_EOL;
 				$len = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
-				$len = $len[1];
-				$cmdsData = substr($cmdsData, 4);
+				#$len = $len[1];
+				$len = hexdec($len[1]);
 				
-				print '-> cmd: '.$cmd.': '.$type.' '.$len.PHP_EOL;
+				if($type == LC_SEGMENT_64){
+					$cmdsData = fread($fh, 16); // segname
+					#print '  -> name: '.$cmdsData.PHP_EOL;
+					#\Doctrine\Common\Util\Debug::dump($cmdsData);
+					#$segname = strval($cmdsData);
+					$segname = strstr($cmdsData, "\0", true);
+					#\Doctrine\Common\Util\Debug::dump($segname);
+					/*$segname = unpack('H*',
+						$cmdsData[15].$cmdsData[14].$cmdsData[13].$cmdsData[12]
+						.$cmdsData[11].$cmdsData[10].$cmdsData[9].$cmdsData[8]
+						.$cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4]
+						.$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]
+					);
+					$segname = $segname[1];*/
+					
+					$cmdsData = fread($fh, 8); // vmaddr
+					$cmdsData = fread($fh, 8); // vmsize
+					
+					$cmdsData = fread($fh, 8); // fileoff
+					$fileoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
+						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					$fileoff = $fileoff[1];
+					print '    -> fileoff: '.$fileoff.PHP_EOL;
+					
+					$cmdsData = fread($fh, 8); // filesize
+					$cmdsData = fread($fh, 4); // maxprot
+					$cmdsData = fread($fh, 4); // initprot
+					
+					$cmdsData = fread($fh, 4); // nsects
+					$nsects = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					$nsects = hexdec($nsects[1]);
+					print '    -> nsects: '.$nsects.PHP_EOL;
+					
+					$cmdsData = fread($fh, 4); // flags
+					
+					print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'"'.PHP_EOL;
+					
+					for($section = 0; $section < $nsects; $section++){
+						$sectionData = fread($fh, 16); // sectname
+						$sectname = strstr($sectionData, "\0", true);
+						
+						$sectionData = fread($fh, 16); // segname
+						
+						$addr = 0;
+						$size = 0;
+						if($this->cpuType | CPU_ARCH_ABI64){
+							$sectionData = fread($fh, 8); // addr
+							$addr = unpack('H*', $sectionData[7].$sectionData[6].$sectionData[5].$sectionData[4].
+								$sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+							
+							$sectionData = fread($fh, 8); // size
+							$size = unpack('H*', $sectionData[7].$sectionData[6].$sectionData[5].$sectionData[4].
+								$sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+						}
+						else{
+							$sectionData = fread($fh, 4); // addr
+							$addr = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+							
+							$sectionData = fread($fh, 4); // size
+							$size = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+						}
+						#$addr = hexdec($addr[1]);
+						$addr = $addr[1];
+						#$size = hexdec($size[1]);
+						$size = $size[1];
+						
+						$sectionData = fread($fh, 4); // offset
+						$sectionData = fread($fh, 4); // align
+						$sectionData = fread($fh, 4); // reloff
+						$sectionData = fread($fh, 4); // nreloc
+						$sectionData = fread($fh, 4); // flags
+						$sectionData = fread($fh, 4); // reserved1
+						$sectionData = fread($fh, 4); // reserved2
+						
+						if($this->cpuType | CPU_ARCH_ABI64){
+							$sectionData = fread($fh, 4); // reserved3
+						}
+						
+						print '        -> sect: '.$section.' 0x'.$addr.' 0x'.$size.' "'.$sectname.'"'.PHP_EOL;
+						
+						#usleep(500000);
+					}
+				}
+				else{
+					$skipLen = $len - 4 - 4;
+					print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
+					$cmdsData = fread($fh, $skipLen);
+				}
+					
+				print PHP_EOL;
+				
+				
+				
+				
+				
 				
 				#$cmdsData = substr($cmdsData, $len);
 				
 				#\Doctrine\Common\Util\Debug::dump($data);
 				
 				#sleep(1);
+				#break;
 			}
 			
-			print '-> pos: '.dechex(ftell($fh)).PHP_EOL;
+			$this->printPos($fh);
 			
-			$data = fread($fh, 20);
+			$data = fread($fh, 256);
+			\Doctrine\Common\Util\Debug::dump($data);
 			$data = unpack('H*', $data);
 			\Doctrine\Common\Util\Debug::dump($data);
 			
@@ -171,7 +277,7 @@ class Binary{
 	}
 	
 	private function printPos($fh){
-		print '-> pos: '.dechex(ftell($fh)).PHP_EOL;
+		print '-> pos: 0x'.dechex(ftell($fh)).PHP_EOL;
 	}
 	
 }
