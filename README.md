@@ -5,7 +5,7 @@ PHP script for modifying [Mach-O](https://en.wikipedia.org/wiki/Mach-O) 64-bit e
 - <https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/index.html>
 
 ## License
-Copyright (C) 2014 Christian Mayer <http://fox21.at>
+Copyright (C) 2014 - 2015 Christian Mayer <http://fox21.at>
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
