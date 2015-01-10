@@ -27,6 +27,7 @@ class Binary{
 	private $nCmds;
 	private $sizeOfCmds;
 	private $flags;
+	private $segments = array();
 	
 	public function __construct($path){
 		$this->path = $path;
@@ -140,10 +141,8 @@ class Binary{
 			#$data = unpack('H*', $data);
 			#\Doctrine\Common\Util\Debug::dump($cmdsData);
 			for($cmd = 0; $cmd < $this->nCmds; $cmd++){
-			#for($cmd = 0; $cmd < 2; $cmd++){
-				$this->printPos($fh);
-				
-				print '-> cmd'.PHP_EOL;
+				#$this->printPos($fh);
+				#print '-> cmd'.PHP_EOL;
 				
 				$cmdsData = fread($fh, 4); // cmd
 				#print '  -> type: '.$cmdsData.PHP_EOL;
@@ -155,6 +154,8 @@ class Binary{
 				$len = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 				#$len = $len[1];
 				$len = hexdec($len[1]);
+				
+				$segname = '';
 				
 				if($type == LC_SEGMENT_64){
 					$cmdsData = fread($fh, 16); // segname
@@ -191,6 +192,12 @@ class Binary{
 					
 					$cmdsData = fread($fh, 4); // flags
 					
+					$this->segments[$segname] = array(
+						'fileoff' => $fileoff,
+						'nsects' => $nsects,
+						'sections' => array(),
+					);
+					
 					print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'"'.PHP_EOL;
 					
 					for($section = 0; $section < $nsects; $section++){
@@ -217,12 +224,15 @@ class Binary{
 							$sectionData = fread($fh, 4); // size
 							$size = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
 						}
-						#$addr = hexdec($addr[1]);
-						$addr = $addr[1];
-						#$size = hexdec($size[1]);
-						$size = $size[1];
+						$addr = hexdec($addr[1]);
+						#$addr = $addr[1];
+						$size = hexdec($size[1]);
+						#$size = $size[1];
 						
 						$sectionData = fread($fh, 4); // offset
+						$offset = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+						$offset = hexdec($offset[1]);
+						
 						$sectionData = fread($fh, 4); // align
 						$sectionData = fread($fh, 4); // reloff
 						$sectionData = fread($fh, 4); // nreloc
@@ -234,43 +244,38 @@ class Binary{
 							$sectionData = fread($fh, 4); // reserved3
 						}
 						
-						print '        -> sect: '.$section.' 0x'.$addr.' 0x'.$size.' "'.$sectname.'"'.PHP_EOL;
+						print '        -> sect: '.$section.' 0x'.dechex($addr).' '.dechex($size).' '.$offset.' "'.$sectname.'"'.PHP_EOL;
+						
+						$this->segments[$segname]['sections'][$sectname] = array(
+							'sectname' => $sectname,
+							'addr' => $addr,
+							'size' => $size,
+							'offset' => $offset,
+						);
 						
 						#usleep(500000);
 					}
 				}
 				else{
 					$skipLen = $len - 4 - 4;
-					print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
+					print '-> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
 					$cmdsData = fread($fh, $skipLen);
 				}
 					
 				print PHP_EOL;
 				
-				
-				
-				
-				
-				
-				#$cmdsData = substr($cmdsData, $len);
-				
-				#\Doctrine\Common\Util\Debug::dump($data);
-				
-				#sleep(1);
-				#break;
 			}
 			
 			$this->printPos($fh);
 			
+			
+			
 			$data = fread($fh, 256);
-			\Doctrine\Common\Util\Debug::dump($data);
+			#\Doctrine\Common\Util\Debug::dump($data);
 			$data = unpack('H*', $data);
-			\Doctrine\Common\Util\Debug::dump($data);
+			#\Doctrine\Common\Util\Debug::dump($data);
 			
-			#\Doctrine\Common\Util\Debug::dump(PHP_INT_SIZE);
-			#\Doctrine\Common\Util\Debug::dump(PHP_INT_MAX);
-			
-			
+			#\Doctrine\Common\Util\Debug::dump($this->segments, 4);
 			
 			fclose($fh);
 		}
