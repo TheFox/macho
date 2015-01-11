@@ -78,7 +78,7 @@ class Binary{
 	private function readHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
-			$this->printPos($fh);
+			#$this->printPos($fh);
 			
 			$data = fread($fh, 4);
 			#\Doctrine\Common\Util\Debug::dump(unpack('H*', $data));
@@ -135,7 +135,7 @@ class Binary{
 				$data = fread($fh, 4);
 			}
 			
-			$this->printPos($fh);
+			#$this->printPos($fh);
 			
 			#$cmdsData = fread($fh, $this->sizeOfCmds);
 			#$data = unpack('H*', $data);
@@ -179,7 +179,7 @@ class Binary{
 					$fileoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
 						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 					$fileoff = $fileoff[1];
-					print '    -> fileoff: '.$fileoff.PHP_EOL;
+					#print '    -> fileoff: '.$fileoff.PHP_EOL;
 					
 					$cmdsData = fread($fh, 8); // filesize
 					$cmdsData = fread($fh, 4); // maxprot
@@ -188,7 +188,7 @@ class Binary{
 					$cmdsData = fread($fh, 4); // nsects
 					$nsects = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 					$nsects = hexdec($nsects[1]);
-					print '    -> nsects: '.$nsects.PHP_EOL;
+					#print '    -> nsects: '.$nsects.PHP_EOL;
 					
 					$cmdsData = fread($fh, 4); // flags
 					
@@ -198,7 +198,7 @@ class Binary{
 						'sections' => array(),
 					);
 					
-					print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'"'.PHP_EOL;
+					#print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'"'.PHP_EOL;
 					
 					for($section = 0; $section < $nsects; $section++){
 						$sectionData = fread($fh, 16); // sectname
@@ -244,7 +244,7 @@ class Binary{
 							$sectionData = fread($fh, 4); // reserved3
 						}
 						
-						print '        -> sect: '.$section.' 0x'.dechex($addr).' '.dechex($size).' '.$offset.' "'.$sectname.'"'.PHP_EOL;
+						#print '        -> sect: '.$section.' 0x'.dechex($addr).' '.dechex($size).' '.$offset.' "'.$sectname.'"'.PHP_EOL;
 						
 						$this->segments[$segname]['sections'][$sectname] = array(
 							'sectname' => $sectname,
@@ -258,21 +258,21 @@ class Binary{
 				}
 				else{
 					$skipLen = $len - 4 - 4;
-					print '-> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
+					#print '-> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
 					$cmdsData = fread($fh, $skipLen);
 				}
 					
-				print PHP_EOL;
+				#print PHP_EOL;
 				
 			}
 			
-			$this->printPos($fh);
+			#$this->printPos($fh);
 			
 			
 			
-			$data = fread($fh, 256);
+			#$data = fread($fh, 256);
 			#\Doctrine\Common\Util\Debug::dump($data);
-			$data = unpack('H*', $data);
+			#$data = unpack('H*', $data);
 			#\Doctrine\Common\Util\Debug::dump($data);
 			
 			#\Doctrine\Common\Util\Debug::dump($this->segments, 4);
