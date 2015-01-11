@@ -285,4 +285,30 @@ class Binary{
 		print '-> pos: 0x'.dechex(ftell($fh)).PHP_EOL;
 	}
 	
+	public function write($segmentName, $sectionName, $offset, $data){
+		\Doctrine\Common\Util\Debug::dump($offset);
+		#\Doctrine\Common\Util\Debug::dump($data);
+		
+		
+		$mode = 'r+';
+		#$mode = 'a+';
+		#$mode = 'w+';
+		$fh = fopen($this->path, $mode);
+		if($fh){
+			if(isset($this->segments[$segmentName])
+				&& isset($this->segments[$segmentName]['sections'][$sectionName])
+				&& $this->segments[$segmentName]['sections'][$sectionName]['offset']){
+				rewind($fh);
+				#fseek($fh, 0);
+				#print 'jump to '.$segmentName.', '.$sectionName.': ';
+				#print $this->segments[$segmentName]['sections'][$sectionName]['offset'].PHP_EOL;
+				fseek($fh, $this->segments[$segmentName]['sections'][$sectionName]['offset'] + $offset);
+				#$this->printPos($fh);
+				
+				fwrite($fh, $data);
+			}
+			fclose($fh);
+		}
+	}
+	
 }
