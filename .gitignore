@@ -6,3 +6,5 @@ pid
 releases
 vendor
 test_data
+config.sh
+debug

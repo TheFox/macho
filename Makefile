@@ -15,7 +15,7 @@ COMPOSER_DEV ?= --dev
 
 all: install test
 
-install: $(VENDOR)
+install: $(VENDOR) config.sh
 
 install_release: $(COMPOSER)
 	$(MAKE) install COMPOSER_DEV=--no-dev
@@ -31,7 +31,7 @@ test_phpcs: $(PHPCS) $(PHPCS_STANDARD)
 
 test_phpunit: $(PHPUNIT) phpunit.xml test_data test_data/test_prog
 	TEST=true $(PHPUNIT) $(PHPUNIT_COVERAGE_HTML) $(PHPUNIT_COVERAGE_XML) $(PHPUNIT_COVERAGE_CLOVER)
-	$(MAKE) test_clean
+	#$(MAKE) test_clean
 
 test_phpunit_cc: build
 	$(MAKE) test_phpunit PHPUNIT_COVERAGE_HTML="--coverage-html build/report"
@@ -79,3 +79,9 @@ build:
 	$(MKDIR) build
 	$(MKDIR) build/logs
 	$(CHMOD) 0700 build
+
+config.sh:
+	echo "#!/usr/bin/env bash" > $@
+	echo "NM="$(shell which nm) >> $@
+	echo "OTOOL="$(shell which otool) >> $@
+	./config.check.sh
