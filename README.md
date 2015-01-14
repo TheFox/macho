@@ -9,7 +9,7 @@ The preferred method of installation is via [Packagist](https://packagist.org/pa
 ## Usage
 - To print general informations about a binary executable you can type the following command into your shell:
 	
-		./application.php binary --all ~/work/dev/test2/build/test1
+		./application.php binary --all PATH
 	
 - Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.
 
