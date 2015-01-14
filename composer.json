@@ -1,9 +1,9 @@
 {
 	"name": "thefox/phpproj",
-	"description": "DESCRIPTION",
+	"description": "PHP script for modifying Mach-O 64-bit executable x86_64 files.",
 	"license": "GPL-3.0",
 	"type": "project",
-	"keywords": [ "KEYWORD1", "KEYWORD2" ],
+	"keywords": [ "Mach", "MachO", "Binary", "x86_64" ],
 	"homepage": "http://fox21.at",
 	"authors": [
 		{
@@ -38,7 +38,7 @@
 	"scripts": {
 		"post-install-cmd": [
 			"echo post-install-cmd",
-			"chmod 755 application.php",
+			"chmod a+x application.php",
 			"php bootstrap.php"
 		],
 		"post-update-cmd": [
