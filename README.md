@@ -7,11 +7,15 @@ The preferred method of installation is via [Packagist](https://packagist.org/pa
 	composer.phar require "thefox/macho=~0.1"
 
 ## Usage
-- To print general informations about a binary executable you can type the following command into your shell:
-	
-		./application.php binary --all PATH
-	
-- Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.
+To print general informations about a binary executable you can type the following command into your shell:
+
+	./application.php binary --all PATH
+
+For example:
+
+	./application.php binary --all
+
+Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.
 
 ## Related Links
 - <https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/index.html>
