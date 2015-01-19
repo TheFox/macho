@@ -7,7 +7,9 @@ use RuntimeException;
 use TheFox\Utilities\Bin;
 
 // /usr/include//macho-o/loader.h
-define('LC_SEGMENT_64', 19);
+define('LC_REQ_DYLD', 0x80000000);
+define('LC_SEGMENT_64', 0x19);
+define('LC_MAIN', 0x28 | LC_REQ_DYLD);
 
 // /usr/include/mach/machine.h
 define('CPU_ARCH_ABI64', 0x01000000);
@@ -27,7 +29,11 @@ class Binary{
 	private $nCmds;
 	private $sizeOfCmds;
 	private $flags;
+	private $expectedFileSize = null;
+	private $expectedMd5sum = null;
 	private $segments = array();
+	private $mainEntryOffset = 0;
+	private $mainVmAddress = 0;
 	
 	public function __construct($path){
 		$this->path = $path;
@@ -39,8 +45,6 @@ class Binary{
 		if(!file_exists($this->path)){
 			throw new RuntimeException('File '.$this->path.' does not exist.', 2);
 		}
-		
-		$this->readHeader();
 	}
 	
 	public function getPath(){
@@ -73,6 +77,39 @@ class Binary{
 	
 	public function getFlags(){
 		return $this->flags;
+	}
+	
+	public function setExpectedFileSize($expectedFileSize){
+		$this->expectedFileSize = $expectedFileSize;
+	}
+	
+	public function setExpectedMd5sum($expectedMd5sum){
+		$this->expectedMd5sum = $expectedMd5sum;
+	}
+	
+	public function getSegments(){
+		return $this->segments;
+	}
+	
+	public function getMainVmAddress(){
+		return $this->mainVmAddress;
+	}
+	
+	private function printPos($fh){
+		print '-> pos: 0x'.dechex(ftell($fh)).PHP_EOL;
+	}
+	
+	public function analyze(){
+		$this->readHeader();
+		
+		if($this->expectedFileSize !== null && filesize($this->path) != $this->expectedFileSize){
+			throw new RuntimeException("File size doesn't match the expected value. ".$this->expectedFileSize, 1);
+		}
+		
+		if($this->expectedMd5sum !== null
+			&& md5_file($this->path) != $this->expectedMd5sum){
+			throw new RuntimeException("MD5 sum doesn't match the expected value. ".$this->expectedMd5sum, 2);
+		}
 	}
 	
 	private function readHeader(){
@@ -147,7 +184,7 @@ class Binary{
 				$cmdsData = fread($fh, 4); // cmd
 				#print '  -> type: '.$cmdsData.PHP_EOL;
 				$type = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
-				$type = $type[1];
+				$type = hexdec($type[1]);
 				
 				$cmdsData = fread($fh, 4); // cmdsize
 				#print '  -> len: '.$cmdsData.PHP_EOL;
@@ -173,12 +210,19 @@ class Binary{
 					$segname = $segname[1];*/
 					
 					$cmdsData = fread($fh, 8); // vmaddr
+					$vmaddr = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
+						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					$vmaddr = hexdec($vmaddr[1]);
+					
 					$cmdsData = fread($fh, 8); // vmsize
+					$vmsize = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
+						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					$vmsize = $vmsize[1];
 					
 					$cmdsData = fread($fh, 8); // fileoff
 					$fileoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
 						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
-					$fileoff = $fileoff[1];
+					$fileoff = hexdec($fileoff[1]);
 					#print '    -> fileoff: '.$fileoff.PHP_EOL;
 					
 					$cmdsData = fread($fh, 8); // filesize
@@ -193,12 +237,15 @@ class Binary{
 					$cmdsData = fread($fh, 4); // flags
 					
 					$this->segments[$segname] = array(
+						'segname' => $segname,
+						'vmaddr' => $vmaddr,
+						'vmsize' => $vmsize,
 						'fileoff' => $fileoff,
 						'nsects' => $nsects,
 						'sections' => array(),
 					);
 					
-					#print '    -> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'"'.PHP_EOL;
+					print '-> cmd: '.$cmd.' '.$len.': '.$fileoff.' 0x'.dechex($vmaddr).' 0x'.dechex($vmsize).' "'.$segname.'"'.PHP_EOL;
 					
 					for($section = 0; $section < $nsects; $section++){
 						$sectionData = fread($fh, 16); // sectname
@@ -234,8 +281,15 @@ class Binary{
 						$offset = hexdec($offset[1]);
 						
 						$sectionData = fread($fh, 4); // align
+						
 						$sectionData = fread($fh, 4); // reloff
+						$reloff = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+						$reloff = hexdec($reloff[1]);
+						
 						$sectionData = fread($fh, 4); // nreloc
+						$nreloc = unpack('H*', $sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
+						$nreloc = hexdec($nreloc[1]);
+						
 						$sectionData = fread($fh, 4); // flags
 						$sectionData = fread($fh, 4); // reserved1
 						$sectionData = fread($fh, 4); // reserved2
@@ -244,7 +298,7 @@ class Binary{
 							$sectionData = fread($fh, 4); // reserved3
 						}
 						
-						#print '        -> sect: '.$section.' 0x'.dechex($addr).' '.dechex($size).' '.$offset.' "'.$sectname.'"'.PHP_EOL;
+						#print '        -> sect: '.$section.' 0x'.dechex($offset).' 0x'.dechex($addr).' "'.$sectname.'"'.PHP_EOL;
 						
 						$this->segments[$segname]['sections'][$sectname] = array(
 							'sectname' => $sectname,
@@ -256,9 +310,27 @@ class Binary{
 						#usleep(500000);
 					}
 				}
+				elseif($type == LC_MAIN){
+					print '    -> LC_MAIN'.PHP_EOL;
+					
+					$cmdsData = fread($fh, 8); // entryoff
+					$entryoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
+						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					$entryoff = hexdec($entryoff[1]);
+					#$entryoff = $entryoff[1];
+					
+					$cmdsData = fread($fh, 8); // stacksize
+					#$stacksize = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
+					#	$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+					#$stacksize = hexdec($stacksize[1]);
+					
+					print '    -> LC_MAIN: '.dechex($entryoff).PHP_EOL;
+					
+					$this->mainEntryOffset = $entryoff;
+				}
 				else{
 					$skipLen = $len - 4 - 4;
-					#print '-> cmd: '.$cmd.': '.$type.' '.$len.' "'.$segname.'" skip '.$skipLen.' byte'.PHP_EOL;
+					#print '-> cmd: '.$cmd.': '.$type.' ('.(dechex(LC_MAIN)).') '.$len.' "'.$segname.'"'.PHP_EOL;
 					$cmdsData = fread($fh, $skipLen);
 				}
 					
@@ -268,8 +340,6 @@ class Binary{
 			
 			#$this->printPos($fh);
 			
-			
-			
 			#$data = fread($fh, 256);
 			#\Doctrine\Common\Util\Debug::dump($data);
 			#$data = unpack('H*', $data);
@@ -278,15 +348,20 @@ class Binary{
 			#\Doctrine\Common\Util\Debug::dump($this->segments, 4);
 			
 			fclose($fh);
+			
+			if(isset($this->segments['__TEXT'])
+				&& isset($this->segments['__TEXT']['vmaddr'])
+				&& $this->segments['__TEXT']['vmaddr']
+				&& $this->mainEntryOffset){
+				$this->mainVmAddress = $this->segments['__TEXT']['vmaddr']
+					+ $this->mainEntryOffset;
+				#print 'mainVmAddress ok: 0x'.dechex($this->mainVmAddress).PHP_EOL;
+			}
 		}
 	}
 	
-	private function printPos($fh){
-		print '-> pos: 0x'.dechex(ftell($fh)).PHP_EOL;
-	}
-	
 	public function write($segmentName, $sectionName, $offset, $data){
-		\Doctrine\Common\Util\Debug::dump($offset);
+		#\Doctrine\Common\Util\Debug::dump($offset);
 		#\Doctrine\Common\Util\Debug::dump($data);
 		
 		

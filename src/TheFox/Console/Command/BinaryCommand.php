@@ -35,6 +35,8 @@ class BinaryCommand extends BasicCommand{
 		$this->addOption('ncmds', null, InputOption::VALUE_NONE, 'Prints the ncmds.');
 		$this->addOption('sizeofcmds', null, InputOption::VALUE_NONE, 'Prints the sizeofcmds.');
 		$this->addOption('flags', null, InputOption::VALUE_NONE, 'Prints the flags.');
+		$this->addOption('segments', null, InputOption::VALUE_NONE, 'Prints segments.');
+		$this->addOption('main', null, InputOption::VALUE_NONE, 'Prints the entry point of the main() function.');
 		
 		$this->addArgument('path', InputArgument::REQUIRED, 'Path to the binary file.');
 	}
@@ -45,6 +47,7 @@ class BinaryCommand extends BasicCommand{
 		if($path = $input->getArgument('path')){
 			#\Doctrine\Common\Util\Debug::dump($path);
 			$binary = new Binary($path);
+			$binary->analyze();
 			
 			$all = false;
 			if($input->hasOption('all') && $input->getOption('all')){
@@ -57,7 +60,7 @@ class BinaryCommand extends BasicCommand{
 			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
 				$abi64 = 0;
 				$abi64 = $binary->getCpuType() & CPU_TYPE_X86_64;
-				$output->writeln('cpu: '.$binary->getCpuType().' '.$binary->getCpuSubtype().' '.($abi64 ? '64' : '32').'-bit');
+				$output->writeln('cpu: '.dechex($binary->getCpuType()).' '.$binary->getCpuSubtype().' '.($abi64 ? '64' : '32').'-bit');
 			}
 			if($all || $input->hasOption('filetype') && $input->getOption('filetype')){
 				$output->writeln('filetype: '.$binary->getFileType());
@@ -71,6 +74,18 @@ class BinaryCommand extends BasicCommand{
 			if($all || $input->hasOption('flags') && $input->getOption('flags')){
 				$output->writeln('flags: '.$binary->getFlags());
 			}
+			if($all || $input->hasOption('main') && $input->getOption('main')){
+				$output->writeln('main: 0x'.dechex($binary->getMainVmAddress()));
+			}
+			if($all || $input->hasOption('segments') && $input->getOption('segments')){
+				foreach($binary->getSegments() as $segment){
+					$output->writeln('segment: '.$segment['segname'].' ('.$segment['nsects'].' 0x'.dechex($segment['vmaddr']).')');
+					foreach($segment['sections'] as $section){
+						$output->writeln("\t section: ".$section['sectname'].' (0x'.dechex($section['addr']).')');
+					}
+				}
+			}
+			
 		}
 		
 		#$this->executePost();
