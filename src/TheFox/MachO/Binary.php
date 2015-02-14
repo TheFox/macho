@@ -245,7 +245,7 @@ class Binary{
 						'sections' => array(),
 					);
 					
-					print '-> cmd: '.$cmd.' '.$len.': '.$fileoff.' 0x'.dechex($vmaddr).' 0x'.dechex($vmsize).' "'.$segname.'"'.PHP_EOL;
+					#print '-> cmd: '.$cmd.' '.$len.': '.$fileoff.' 0x'.dechex($vmaddr).' 0x'.dechex($vmsize).' "'.$segname.'"'.PHP_EOL;
 					
 					for($section = 0; $section < $nsects; $section++){
 						$sectionData = fread($fh, 16); // sectname
@@ -311,7 +311,7 @@ class Binary{
 					}
 				}
 				elseif($type == LC_MAIN){
-					print '    -> LC_MAIN'.PHP_EOL;
+					#print '    -> LC_MAIN'.PHP_EOL;
 					
 					$cmdsData = fread($fh, 8); // entryoff
 					$entryoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
@@ -324,7 +324,7 @@ class Binary{
 					#	$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 					#$stacksize = hexdec($stacksize[1]);
 					
-					print '    -> LC_MAIN: '.dechex($entryoff).PHP_EOL;
+					#print '    -> LC_MAIN: '.dechex($entryoff).PHP_EOL;
 					
 					$this->mainEntryOffset = $entryoff;
 				}
