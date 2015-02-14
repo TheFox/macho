@@ -20,6 +20,9 @@ Another way to print general informations about a binary executable is to use `d
 ## Related Links
 - [Blog Post about Mach-O project](http://blog.fox21.at/2015/02/14/mach-o.html)
 
+## Examples
+Look into <examples> directory to see code examples how to use this in your own project.
+
 ## License
 Copyright (C) 2014 Christian Mayer <http://fox21.at>
 
