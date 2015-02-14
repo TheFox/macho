@@ -8,3 +8,4 @@ vendor
 test_data
 config.sh
 debug
+*.o

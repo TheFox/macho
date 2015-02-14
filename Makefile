@@ -1,4 +1,5 @@
 
+CFLAGS = -Wall -O3
 RM = rm -rf
 CHMOD = chmod
 MKDIR = mkdir -p
@@ -13,7 +14,7 @@ COMPOSER_DEV ?= --dev
 
 .PHONY: all install test test_phpcs test_phpunit test_phpunit_cc test_clean release clean clean_release clean_all
 
-all: install test
+all: install test examples/example1 examples/example2
 
 install: $(VENDOR) config.sh
 
@@ -85,3 +86,15 @@ config.sh:
 	echo "NM="$(shell which nm) >> $@
 	echo "OTOOL="$(shell which otool) >> $@
 	./config.check.sh
+
+examples/example1: examples/example1.o
+	$(CC) $(CFLAGS) $< -o $@
+
+examples/example1.o: examples/example1.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+examples/example2: examples/example2.o
+	$(CC) $(CFLAGS) $< -o $@
+
+examples/example2.o: examples/example1.c
+	$(CC) $(CFLAGS) -c $< -o $@
