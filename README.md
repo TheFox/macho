@@ -18,7 +18,7 @@ For example:
 Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.
 
 ## Related Links
-- <https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/index.html>
+- [Blog Post about Mach-O project](http://blog.fox21.at/2015/02/14/mach-o.html)
 
 ## License
 Copyright (C) 2014 Christian Mayer <http://fox21.at>
