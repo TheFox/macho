@@ -45,55 +45,24 @@ echo "create text section debug informations"
 txt=$dst/text_section.txt
 $OTOOL -vVtjC $path > $txt
 #grep -Hn call $txt > $dst/text_section_calls.txt
-#ls -lah $txt
-#echo
 
-echo "create stubs section debug informations"
-txt=$dst/stubs_section.txt
-$OTOOL -vVjC -s __TEXT __stubs $path > $txt
-#ls -lah $txt
-#echo
+for section in __stubs __stub_helper __cstring __ustring __objc_classname __objc_methname __objc_methtype __const __gcc_except_tab __unwind_info __eh_frame; do
+	echo "create text '$section' section debug informations"
+	txt=$dst/section-$section.txt
+	$OTOOL -vVjC -s __TEXT $section $path > $txt
+done
 
-echo "create cstring section debug informations"
-txt=$dst/cstring_section.txt
-$OTOOL -vVjC -s __TEXT __cstring $path > $txt
-#ls -lah $txt
-#echo
+for section in __program_vars __nl_symbol_ptr __got __la_symbol_ptr __mod_init_func __pointers __const __cfstring __objc_classlist __objc_nlclslist __objc_catlist __objc_protolist __objc_imageinfo __objc_const __objc_selrefs __objc_protorefs __objc_classrefs __objc_superrefs __objc_ivar __objc_data __data __bss __common; do
+	echo "create data '$section' section debug informations"
+	txt=$dst/section-$section.txt
+	$OTOOL -vVjC -s __DATA $section $path > $txt
+done
 
-echo "create ustring section debug informations"
-txt=$dst/ustring_section.txt
-$OTOOL -vVjC -s __TEXT __ustring $path > $txt
-#ls -lah $txt
-#echo
-
-echo "create objc_methname section debug informations"
-txt=$dst/objc_methname_section.txt
-$OTOOL -vVjC -s __TEXT __objc_methname $path > $txt
-#ls -lah $txt
-#echo
-
-echo "create objc_methtype section debug informations"
-txt=$dst/objc_methtype_section.txt
-$OTOOL -vVjC -s __TEXT __objc_methtype $path > $txt
-#ls -lah $txt
-#echo
-
-echo "create const section debug informations"
-txt=$dst/const_section.txt
-$OTOOL -vVjC -s __TEXT __const $path > $txt
-#ls -lah $txt
-#echo
 
 echo "create name list debug informations"
 txt=$dst/name_list.txt
 $NM -na $path > $txt
-#ls -lah $txt
-#echo
-
-
 
 echo "create load commands debug informations"
 txt=$dst/load_commands.txt
 $OTOOL -l $path > $txt
-#ls -lah $txt
-#echo
