@@ -41,21 +41,23 @@ echo "name: $name ($dst)"
 echo "path: $path"
 echo
 
-echo "create text section debug informations"
-txt=$dst/text_section.txt
+segment=__TEXT
+section=__text
+echo "create text '$section' section debug informations"
+txt=$dst/section-$segment-$section.txt
 $OTOOL -vVtjC $path > $txt
-#grep -Hn call $txt > $dst/text_section_calls.txt
 
 for section in __stubs __stub_helper __cstring __ustring __objc_classname __objc_methname __objc_methtype __const __gcc_except_tab __unwind_info __eh_frame; do
 	echo "create text '$section' section debug informations"
-	txt=$dst/section-$section.txt
-	$OTOOL -vVjC -s __TEXT $section $path > $txt
+	txt=$dst/section-$segment-$section.txt
+	$OTOOL -vVjC -s $segment $section $path > $txt
 done
 
+segment=__DATA
 for section in __program_vars __nl_symbol_ptr __got __la_symbol_ptr __mod_init_func __pointers __const __cfstring __objc_classlist __objc_nlclslist __objc_catlist __objc_protolist __objc_imageinfo __objc_const __objc_selrefs __objc_protorefs __objc_classrefs __objc_superrefs __objc_ivar __objc_data __data __bss __common; do
 	echo "create data '$section' section debug informations"
-	txt=$dst/section-$section.txt
-	$OTOOL -vVjC -s __DATA $section $path > $txt
+	txt=$dst/section-$segment-$section.txt
+	$OTOOL -vVjC -s $segment $section $path > $txt
 done
 
 
