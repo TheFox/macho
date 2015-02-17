@@ -59,7 +59,7 @@ class BinaryCommand extends BasicCommand{
 			}
 			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
 				$abi64 = 0;
-				$abi64 = $binary->getCpuType() & CPU_TYPE_X86_64;
+				$abi64 = $binary->getCpuType() & \TheFox\MachO\CPU_TYPE_X86_64;
 				$output->writeln('cpu: '.dechex($binary->getCpuType()).' '.$binary->getCpuSubtype().' '.($abi64 ? '64' : '32').'-bit');
 			}
 			if($all || $input->hasOption('filetype') && $input->getOption('filetype')){

@@ -6,19 +6,6 @@ use RuntimeException;
 
 use TheFox\Utilities\Bin;
 
-// /usr/include//macho-o/loader.h
-define('LC_REQ_DYLD', 0x80000000);
-define('LC_SEGMENT_64', 0x19);
-define('LC_MAIN', 0x28 | LC_REQ_DYLD);
-
-// /usr/include/mach/machine.h
-define('CPU_ARCH_ABI64', 0x01000000);
-define('CPU_TYPE_X86', 7);
-define('CPU_TYPE_X86_64', CPU_TYPE_X86 | CPU_ARCH_ABI64);
-define('CPU_TYPE_ARM', 12);
-define('CPU_TYPE_ARM64', CPU_TYPE_ARM | CPU_ARCH_ABI64);
-define('CPU_SUBTYPE_LIB64', 0x80000000);
-
 class Binary{
 	
 	private $path;
@@ -131,7 +118,7 @@ class Binary{
 			
 			$data = fread($fh, 4);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			$this->cpuSubtype = hexdec($data[1]) & ~CPU_SUBTYPE_LIB64;
+			$this->cpuSubtype = hexdec($data[1]) & ~\TheFox\MachO\CPU_SUBTYPE_LIB64;
 			
 			$data = fread($fh, 4);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
@@ -149,7 +136,7 @@ class Binary{
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
 			$this->flags = '0x'.$data[1];
 			
-			if($this->cpuType | CPU_ARCH_ABI64){
+			if($this->cpuType | \TheFox\MachO\CPU_ARCH_ABI64){
 				// reserved
 				$data = fread($fh, 4);
 			}
@@ -216,7 +203,7 @@ class Binary{
 						
 						$addr = 0;
 						$size = 0;
-						if($this->cpuType | CPU_ARCH_ABI64){
+						if($this->cpuType | \TheFox\MachO\CPU_ARCH_ABI64){
 							$sectionData = fread($fh, 8); // addr
 							$addr = unpack('H*', $sectionData[7].$sectionData[6].$sectionData[5].$sectionData[4].
 								$sectionData[3].$sectionData[2].$sectionData[1].$sectionData[0]);
@@ -255,7 +242,7 @@ class Binary{
 						$sectionData = fread($fh, 4); // reserved1
 						$sectionData = fread($fh, 4); // reserved2
 						
-						if($this->cpuType | CPU_ARCH_ABI64){
+						if($this->cpuType | \TheFox\MachO\CPU_ARCH_ABI64){
 							$sectionData = fread($fh, 4); // reserved3
 						}
 						
@@ -269,8 +256,8 @@ class Binary{
 						);
 					}
 				}
-				elseif($type == LC_MAIN){
-					#print '    -> LC_MAIN'.PHP_EOL;
+				elseif($type == \TheFox\MachO\LC_MAIN){
+					#print '    -> \TheFox\MachO\LC_MAIN'.PHP_EOL;
 					
 					$cmdsData = fread($fh, 8); // entryoff
 					$entryoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
