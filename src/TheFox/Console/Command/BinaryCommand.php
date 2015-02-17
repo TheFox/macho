@@ -10,6 +10,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use TheFox\MachO\Binary;
+use TheFox\MachO\LoadCommandSegment;
+use TheFox\MachO\LoadCommandEntryPoint;
 
 /**
  * @codeCoverageIgnore
@@ -45,7 +47,6 @@ class BinaryCommand extends BasicCommand{
 		#$this->executePre($input, $output);
 		
 		if($path = $input->getArgument('path')){
-			#\Doctrine\Common\Util\Debug::dump($path);
 			$binary = new Binary($path);
 			$binary->analyze();
 			
@@ -78,10 +79,15 @@ class BinaryCommand extends BasicCommand{
 				$output->writeln('main: 0x'.dechex($binary->getMainVmAddress()));
 			}
 			if($all || $input->hasOption('segments') && $input->getOption('segments')){
-				foreach($binary->getSegments() as $segment){
-					$output->writeln('segment: '.$segment['segname'].' ('.$segment['nsects'].' 0x'.dechex($segment['vmaddr']).')');
-					foreach($segment['sections'] as $section){
-						$output->writeln("\t section: ".$section['sectname'].' (0x'.dechex($section['addr']).')');
+				foreach($binary->getLoadCommands() as $lcmdName => $lcmd){
+					if($lcmd instanceof LoadCommandSegment){
+						$output->writeln('segment: '.$lcmd.' ('.$lcmd->getNsects().' 0x'.dechex($lcmd->getVmAddr()).')');
+						foreach($lcmd->getSections() as $sectionId => $section){
+							$output->writeln("\t".' section: '.$sectionId.' "'.$section->getName().'" (0x'.dechex($section->getAddr()).' 0x'.dechex($section->getOffset()).')');
+						}
+					}
+					elseif($lcmd instanceof LoadCommandEntryPoint){
+						$output->writeln('segment: '.$lcmd.' (0x'.dechex($lcmd->getEntryOff()).' 0x'.dechex($lcmd->getStackSize()).')');
 					}
 				}
 			}
