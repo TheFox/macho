@@ -115,13 +115,9 @@ class Binary{
 	private function readHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
-			#$this->printPos($fh);
 			
 			$data = fread($fh, 4);
-			#\Doctrine\Common\Util\Debug::dump(unpack('H*', $data));
-			#\Doctrine\Common\Util\Debug::dump(unpack('h*', $data));
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
 			
 			if($data[1] != 'feedfacf'){
 				fclose($fh);
@@ -130,84 +126,49 @@ class Binary{
 			$this->magic = '0x'.$data[1];
 			
 			$data = fread($fh, 4);
-			#$data = unpack('H*', $data);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
 			$this->cpuType = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			#$data = unpack('H*', $data);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
-			#$this->cpuSubtype = $data[1];
-			#$this->cpuSubtype = hexdec($data[1]) & ~static::CPU_SUBTYPE_LIB64;
 			$this->cpuSubtype = hexdec($data[1]) & ~CPU_SUBTYPE_LIB64;
 			
 			$data = fread($fh, 4);
-			#$data = unpack('H*', $data);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
-			#$this->fileType = (int)$data[1];
 			$this->fileType = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			#$data = unpack('H*', $data);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
 			$this->nCmds = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
 			$this->sizeOfCmds = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
 			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
-			#\Doctrine\Common\Util\Debug::dump($data);
 			$this->flags = '0x'.$data[1];
-			#$this->flags = hexdec($data[1]);
 			
 			if($this->cpuType | CPU_ARCH_ABI64){
-				/* reserved */
+				// reserved
 				$data = fread($fh, 4);
 			}
 			
-			#$this->printPos($fh);
-			
-			#$cmdsData = fread($fh, $this->sizeOfCmds);
-			#$data = unpack('H*', $data);
-			#\Doctrine\Common\Util\Debug::dump($cmdsData);
 			for($cmd = 0; $cmd < $this->nCmds; $cmd++){
-				#$this->printPos($fh);
-				#print '-> cmd'.PHP_EOL;
 				
 				$cmdsData = fread($fh, 4); // cmd
-				#print '  -> type: '.$cmdsData.PHP_EOL;
 				$type = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 				$type = hexdec($type[1]);
 				
 				$cmdsData = fread($fh, 4); // cmdsize
-				#print '  -> len: '.$cmdsData.PHP_EOL;
 				$len = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
-				#$len = $len[1];
 				$len = hexdec($len[1]);
 				
 				$segname = '';
 				
 				if($type == LC_SEGMENT_64){
 					$cmdsData = fread($fh, 16); // segname
-					#print '  -> name: '.$cmdsData.PHP_EOL;
-					#\Doctrine\Common\Util\Debug::dump($cmdsData);
-					#$segname = strval($cmdsData);
 					$segname = strstr($cmdsData, "\0", true);
-					#\Doctrine\Common\Util\Debug::dump($segname);
-					/*$segname = unpack('H*',
-						$cmdsData[15].$cmdsData[14].$cmdsData[13].$cmdsData[12]
-						.$cmdsData[11].$cmdsData[10].$cmdsData[9].$cmdsData[8]
-						.$cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4]
-						.$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]
-					);
-					$segname = $segname[1];*/
 					
 					$cmdsData = fread($fh, 8); // vmaddr
 					$vmaddr = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
@@ -306,8 +267,6 @@ class Binary{
 							'size' => $size,
 							'offset' => $offset,
 						);
-						
-						#usleep(500000);
 					}
 				}
 				elseif($type == LC_MAIN){
@@ -317,14 +276,11 @@ class Binary{
 					$entryoff = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
 						$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 					$entryoff = hexdec($entryoff[1]);
-					#$entryoff = $entryoff[1];
 					
 					$cmdsData = fread($fh, 8); // stacksize
 					#$stacksize = unpack('H*', $cmdsData[7].$cmdsData[6].$cmdsData[5].$cmdsData[4].
 					#	$cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
 					#$stacksize = hexdec($stacksize[1]);
-					
-					#print '    -> LC_MAIN: '.dechex($entryoff).PHP_EOL;
 					
 					$this->mainEntryOffset = $entryoff;
 				}
@@ -333,19 +289,9 @@ class Binary{
 					#print '-> cmd: '.$cmd.': '.$type.' ('.(dechex(LC_MAIN)).') '.$len.' "'.$segname.'"'.PHP_EOL;
 					$cmdsData = fread($fh, $skipLen);
 				}
-					
 				#print PHP_EOL;
 				
 			}
-			
-			#$this->printPos($fh);
-			
-			#$data = fread($fh, 256);
-			#\Doctrine\Common\Util\Debug::dump($data);
-			#$data = unpack('H*', $data);
-			#\Doctrine\Common\Util\Debug::dump($data);
-			
-			#\Doctrine\Common\Util\Debug::dump($this->segments, 4);
 			
 			fclose($fh);
 			
