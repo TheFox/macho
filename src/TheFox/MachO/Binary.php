@@ -16,9 +16,11 @@ class Binary{
 	private $nCmds;
 	private $sizeOfCmds;
 	private $flags;
+	
+	private $loadCommands = array();
+	
 	private $expectedFileSize = null;
 	private $expectedMd5sum = null;
-	private $loadCommands = array();
 	private $mainEntryOffset = 0;
 	private $mainVmAddress = 0;
 	
@@ -87,7 +89,7 @@ class Binary{
 	}
 	
 	public function analyze(){
-		$this->readHeader();
+		$this->parseHeader();
 		
 		if($this->expectedFileSize !== null && filesize($this->path) != $this->expectedFileSize){
 			throw new RuntimeException("File size doesn't match the expected value. ".$this->expectedFileSize, 1);
@@ -99,7 +101,7 @@ class Binary{
 		}
 	}
 	
-	private function readHeader(){
+	private function parseHeader(){
 		$fh = fopen($this->path, 'r');
 		if($fh){
 			
