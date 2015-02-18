@@ -49,22 +49,19 @@ class LoadCommand{
 			
 			$data = substr($bin, 0, 8); // vmaddr
 			$bin = substr($bin, 8);
-			$val = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-				$data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setVmAddr($val);
 			
 			$data = substr($bin, 0, 8); // vmsize
 			$bin = substr($bin, 8);
-			$val = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-				$data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setVmSize($val);
 			
 			$data = substr($bin, 0, 8); // fileoff
 			$bin = substr($bin, 8);
-			$val = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-				$data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setFileOff($val);
 			
@@ -79,7 +76,7 @@ class LoadCommand{
 			
 			$data = substr($bin, 0, 4); // nsects
 			$bin = substr($bin, 4);
-			$val = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setNsects($val);
 			$nsects = $val;
@@ -108,22 +105,20 @@ class LoadCommand{
 				if($lcmd->getBinary()->getCpuType() | \TheFox\MachO\CPU_ARCH_ABI64){
 					$data = substr($bin, 0, 8); // addr
 					$bin = substr($bin, 8);
-					$addr = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-						$data[3].$data[2].$data[1].$data[0]);
+					$addr = unpack('H*', strrev($data));
 					
 					$data = substr($bin, 0, 8); // size
 					$bin = substr($bin, 8);
-					$size = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-						$data[3].$data[2].$data[1].$data[0]);
+					$size = unpack('H*', strrev($data));
 				}
 				else{
 					$data = substr($bin, 0, 4); // addr
 					$bin = substr($bin, 4);
-					$addr = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+					$addr = unpack('H*', strrev($data));
 					
 					$data = substr($bin, 0, 4); // size
 					$bin = substr($bin, 4);
-					$size = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+					$size = unpack('H*', strrev($data));
 				}
 				$addr = hexdec($addr[1]);
 				$size = hexdec($size[1]);
@@ -132,7 +127,7 @@ class LoadCommand{
 				
 				$data = substr($bin, 0, 4); // offset
 				$bin = substr($bin, 4);
-				$val = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+				$val = unpack('H*', strrev($data));
 				$val = hexdec($val[1]);
 				$sectionO->setOffset($val);
 				
@@ -141,13 +136,13 @@ class LoadCommand{
 				
 				$data = substr($bin, 0, 4); // reloff
 				$bin = substr($bin, 4);
-				$val = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+				$val = unpack('H*', strrev($data));
 				$val = hexdec($val[1]);
 				$sectionO->setReloff($val);
 				
 				$data = substr($bin, 0, 4); // nreloc
 				$bin = substr($bin, 4);
-				$val = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+				$val = unpack('H*', strrev($data));
 				$val = hexdec($val[1]);
 				$sectionO->setNreloc($val);
 				
@@ -179,15 +174,13 @@ class LoadCommand{
 			
 			$data = substr($bin, 0, 8); // entryoff
 			$bin = substr($bin, 8);
-			$val = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-				$data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setEntryOff($val);
 			
 			$data = substr($bin, 0, 8); // stacksize
 			$bin = substr($bin, 8);
-			$val = unpack('H*', $data[7].$data[6].$data[5].$data[4].
-				$data[3].$data[2].$data[1].$data[0]);
+			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setStackSize($val);
 		}
