@@ -6,7 +6,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException RuntimeException
-	 * @expectedExceptionCode 1
+	 * @expectedExceptionCode 10
 	 */
 	public function testConstructRuntimeException1(){
 		$binary = new Binary('');
@@ -14,7 +14,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException RuntimeException
-	 * @expectedExceptionCode 2
+	 * @expectedExceptionCode 11
 	 */
 	public function testConstructRuntimeException2(){
 		$binary = new Binary('no_file');
@@ -22,17 +22,19 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException RuntimeException
-	 * @expectedExceptionCode 3
+	 * @expectedExceptionCode 30
 	 */
 	public function testConstructRuntimeException3(){
 		$binary = new Binary('tests/BinaryTest.php');
+		$binary->analyze();
 	}
 	
 	public function testConstruct(){
 		$binary = new Binary('test_data/test_prog');
+		$binary->analyze();
 		
 		$this->assertEquals('test_data/test_prog', $binary->getPath());
-		$this->assertEquals('cffaedfe', $binary->getMagic());
+		$this->assertEquals('0xfeedfacf', $binary->getMagic());
 	}
 	
 }

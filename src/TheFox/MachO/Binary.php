@@ -28,11 +28,11 @@ class Binary{
 		$this->path = $path;
 		
 		if(!$this->path){
-			throw new RuntimeException('No Path.', 1);
+			throw new RuntimeException('No Path.', 10);
 		}
 		
 		if(!file_exists($this->path)){
-			throw new RuntimeException('File '.$this->path.' does not exist.', 2);
+			throw new RuntimeException('File '.$this->path.' does not exist.', 11);
 		}
 	}
 	
@@ -56,7 +56,7 @@ class Binary{
 		return $this->fileType;
 	}
 	
-	public function getNCmds(){
+	public function getNcmds(){
 		return $this->nCmds;
 	}
 	
@@ -92,12 +92,12 @@ class Binary{
 		$this->parseHeader();
 		
 		if($this->expectedFileSize !== null && filesize($this->path) != $this->expectedFileSize){
-			throw new RuntimeException("File size doesn't match the expected value. ".$this->expectedFileSize, 1);
+			throw new RuntimeException("File size doesn't match the expected value. ".$this->expectedFileSize, 20);
 		}
 		
 		if($this->expectedMd5sum !== null
 			&& md5_file($this->path) != $this->expectedMd5sum){
-			throw new RuntimeException("MD5 sum doesn't match the expected value. ".$this->expectedMd5sum, 2);
+			throw new RuntimeException("MD5 sum doesn't match the expected value. ".$this->expectedMd5sum, 21);
 		}
 	}
 	
@@ -110,7 +110,7 @@ class Binary{
 			
 			if($data[1] != 'feedfacf'){
 				fclose($fh);
-				throw new RuntimeException('Unknown file type.', 3);
+				throw new RuntimeException('Unknown file type.', 30);
 			}
 			$this->magic = '0x'.$data[1];
 			
