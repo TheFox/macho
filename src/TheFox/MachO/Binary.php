@@ -166,8 +166,8 @@ class Binary{
 				
 				if(isset($this->loadCommands['__TEXT'])){
 					#\Doctrine\Common\Util\Debug::dump($this->loadCommands['__TEXT'], 3);
-					$this->mainVmAddress = $this->loadCommands['__TEXT']->getVmAddr()
-						+ $this->mainEntryOffset;
+					$this->mainVmAddress = $this->loadCommands['__TEXT']->getVmAddr();
+					$this->mainVmAddress += $this->mainEntryOffset;
 				}
 			}
 			#print 'mainEntryOffset: 0x'.dechex($this->mainEntryOffset).PHP_EOL;

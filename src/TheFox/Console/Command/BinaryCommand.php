@@ -61,7 +61,10 @@ class BinaryCommand extends BasicCommand{
 			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
 				$abi64 = 0;
 				$abi64 = $binary->getCpuType() & \TheFox\MachO\CPU_TYPE_X86_64;
-				$output->writeln('cpu: '.dechex($binary->getCpuType()).' '.$binary->getCpuSubtype().' '.($abi64 ? '64' : '32').'-bit');
+				$out = 'cpu: '.dechex($binary->getCpuType()).' ';
+				$out .= $binary->getCpuSubtype().' ';
+				$out .= ($abi64 ? '64' : '32').'-bit';
+				$output->writeln($out);
 			}
 			if($all || $input->hasOption('filetype') && $input->getOption('filetype')){
 				$output->writeln('filetype: '.$binary->getFileType());
@@ -83,7 +86,9 @@ class BinaryCommand extends BasicCommand{
 					if($lcmd instanceof LoadCommandSegment){
 						$output->writeln('segment: '.$lcmd.' ('.$lcmd->getNsects().' 0x'.dechex($lcmd->getVmAddr()).')');
 						foreach($lcmd->getSections() as $sectionId => $section){
-							$output->writeln("\t".' section: '.$sectionId.' "'.$section->getName().'" (0x'.dechex($section->getAddr()).' 0x'.dechex($section->getOffset()).')');
+							$out = "\t".' section: '.$sectionId.' ';
+							$out .= '"'.$section->getName().'" (0x'.dechex($section->getAddr()).' 0x'.dechex($section->getOffset()).')';
+							$output->writeln($out);
 						}
 					}
 					elseif($lcmd instanceof LoadCommandEntryPoint){
