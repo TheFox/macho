@@ -23,6 +23,7 @@ class Binary{
 	private $expectedMd5sum = null;
 	private $mainEntryOffset = 0;
 	private $mainVmAddress = 0;
+	private $ehFrame = null;
 	
 	public function __construct($path){
 		$this->path = $path;
@@ -82,6 +83,13 @@ class Binary{
 	
 	public function getMainVmAddress(){
 		return $this->mainVmAddress;
+	}
+	
+	public function getEhFrame(){
+		if(!$this->ehFrame){
+			$this->parseEhFrame();
+		}
+		return $this->ehFrame;
 	}
 	
 	private function printPos($fh){
@@ -196,6 +204,32 @@ class Binary{
 			}
 			
 			fclose($fh);
+		}
+	}
+	
+	private function parseEhFrame(){
+		if(isset($this->loadCommands['__TEXT'])){
+			$lcmd = $this->loadCommands['__TEXT'];
+			#\Doctrine\Common\Util\Debug::dump($lcmd);
+			
+			$section = $lcmd->getSectionByName('__eh_frame');
+			
+			#\Doctrine\Common\Util\Debug::dump($section, 1);
+			
+			$fh = fopen($this->path, 'r');
+			if($fh){
+				$pos = $section->getOffset();
+				rewind($fh);
+				fseek($fh, $pos);
+				$data = fread($fh, $section->getSize());
+				
+				#$data = unpack('H*', $data);
+				#\Doctrine\Common\Util\Debug::dump($data);
+				fclose($fh);
+				
+				
+				$this->ehFrame = EhFrame::fromBinaryWithoutHead($this, $data);
+			}
 		}
 	}
 	
