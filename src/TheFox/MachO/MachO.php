@@ -2,6 +2,7 @@
 
 namespace TheFox\MachO;
 
+// @codeCoverageIgnoreStart
 // /usr/include//macho-o/loader.h
 define(__NAMESPACE__.'\MH_MAGIC', 0xfeedface);
 define(__NAMESPACE__.'\MH_MAGIC_64', 0xfeedfacf);
@@ -20,7 +21,7 @@ define(__NAMESPACE__.'\CPU_TYPE_X86_64', CPU_TYPE_X86 | CPU_ARCH_ABI64);
 define(__NAMESPACE__.'\CPU_TYPE_ARM', 12);
 define(__NAMESPACE__.'\CPU_TYPE_ARM64', CPU_TYPE_ARM | CPU_ARCH_ABI64);
 define(__NAMESPACE__.'\CPU_SUBTYPE_LIB64', 0x80000000);
-
+// @codeCoverageIgnoreEnd
 
 class MachO{
 	

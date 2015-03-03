@@ -2,6 +2,9 @@
 
 namespace TheFox\MachO;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EhFrameHdrCfiRecord{
 	
 	private $cie;

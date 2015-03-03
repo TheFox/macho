@@ -64,7 +64,7 @@ class LoadCommandSegment extends LoadCommand{
 		$this->sections = $sections;
 	}
 	
-	public function addSection($section){
+	public function addSection(LoadSection $section){
 		$name = (string)$section;
 		$this->sections[$name] = $section;
 	}

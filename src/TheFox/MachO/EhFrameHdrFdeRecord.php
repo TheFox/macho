@@ -2,6 +2,9 @@
 
 namespace TheFox\MachO;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EhFrameHdrFdeRecord extends EhFrameHdrRecord{
 	
 	private $pcBegin;

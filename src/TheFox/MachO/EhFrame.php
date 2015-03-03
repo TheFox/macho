@@ -6,6 +6,9 @@ namespace TheFox\MachO;
 
 use TheFox\Utilities\Leb128;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EhFrame{
 	
 	private $records = array();

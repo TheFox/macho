@@ -2,6 +2,9 @@
 
 namespace TheFox\MachO;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EhFrameHdrCieRecord extends EhFrameHdrRecord{
 	
 	private $version;

@@ -41,30 +41,51 @@ class Binary{
 		return $this->path;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getMagic(){
 		return $this->magic;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getCpuType(){
 		return $this->cpuType;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getCpuSubtype(){
 		return $this->cpuSubtype;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getFileType(){
 		return $this->fileType;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getNcmds(){
 		return $this->nCmds;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getSizeOfCmds(){
 		return $this->sizeOfCmds;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getFlags(){
 		return $this->flags;
 	}
@@ -73,18 +94,35 @@ class Binary{
 		$this->expectedFileSize = $expectedFileSize;
 	}
 	
+	public function getExpectedFileSize(){
+		return $this->expectedFileSize;
+	}
+	
 	public function setExpectedMd5sum($expectedMd5sum){
 		$this->expectedMd5sum = $expectedMd5sum;
 	}
 	
+	public function getExpectedMd5sum(){
+		return $this->expectedMd5sum;
+	}
+	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getLoadCommands(){
 		return $this->loadCommands;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getMainVmAddress(){
 		return $this->mainVmAddress;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function getEhFrame(){
 		if(!$this->ehFrame){
 			$this->parseEhFrame();
@@ -92,6 +130,9 @@ class Binary{
 		return $this->ehFrame;
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	private function printPos($fh){
 		print '-> pos: 0x'.dechex(ftell($fh)).PHP_EOL;
 	}
@@ -189,6 +230,9 @@ class Binary{
 		}
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function write($segmentName, $sectionName, $offset, $data){
 		$mode = 'r+';
 		$fh = fopen($this->path, $mode);
@@ -213,6 +257,9 @@ class Binary{
 		}
 	}
 	
+	/**
+	 * @codeCoverageIgnore
+	 */
 	private function parseEhFrame(){
 		if(isset($this->loadCommands['__TEXT'])){
 			$lcmd = $this->loadCommands['__TEXT'];

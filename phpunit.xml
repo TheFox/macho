@@ -17,13 +17,15 @@
 	timeoutForSmallTests="1"
 	timeoutForMediumTests="10"
 	timeoutForLargeTests="60"
-	strict="true"
 	verbose="true">
 	
 	<testsuites>
 		<testsuite name="My Test Suite">
-			<file>tests/BasicTest.php</file>
 			<file>tests/BinaryTest.php</file>
+			<file>tests/LoadCommandEntryPointTest.php</file>
+			<file>tests/LoadCommandSegmentTest.php</file>
+			<file>tests/LoadSectionTest.php</file>
+			<file>tests/MachOTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>
