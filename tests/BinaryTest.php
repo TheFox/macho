@@ -10,6 +10,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	 */
 	public function testConstructRuntimeException10(){
 		$binary = new Binary('');
+		$binary->analyze();
 	}
 	
 	/**
@@ -18,6 +19,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	 */
 	public function testConstructRuntimeException11(){
 		$binary = new Binary('no_file');
+		$binary->analyze();
 	}
 	
 	/**

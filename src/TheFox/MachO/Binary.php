@@ -27,14 +27,6 @@ class Binary{
 	
 	public function __construct($path){
 		$this->path = $path;
-		
-		if(!$this->path){
-			throw new RuntimeException('No Path.', 10);
-		}
-		
-		if(!file_exists($this->path)){
-			throw new RuntimeException('File '.$this->path.' does not exist.', 11);
-		}
 	}
 	
 	public function getPath(){
@@ -138,6 +130,14 @@ class Binary{
 	}
 	
 	public function analyze(){
+		if(!$this->path){
+			throw new RuntimeException('No Path.', 10);
+		}
+		
+		if(!file_exists($this->path)){
+			throw new RuntimeException('File '.$this->path.' does not exist.', 11);
+		}
+		
 		$this->parseHeader();
 		
 		if($this->expectedFileSize !== null && filesize($this->path) != $this->expectedFileSize){

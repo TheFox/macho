@@ -25,7 +25,7 @@ class LoadCommand{
 		return $this->length;
 	}
 	
-	public function setBinary($binary){
+	public function setBinary(Binary $binary){
 		$this->binary = $binary;
 	}
 	

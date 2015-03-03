@@ -24,6 +24,7 @@
 			<file>tests/BinaryTest.php</file>
 			<file>tests/LoadCommandEntryPointTest.php</file>
 			<file>tests/LoadCommandSegmentTest.php</file>
+			<file>tests/LoadCommandTest.php</file>
 			<file>tests/LoadSectionTest.php</file>
 			<file>tests/MachOTest.php</file>
 		</testsuite>
