@@ -67,7 +67,7 @@ class EhFrame{
 			$val = unpack('H*', $data);
 			$val = hexdec($val[1]);
 			$version = $val;
-			$pos += 1;
+			$pos++;
 			#\Doctrine\Common\Util\Debug::dump($val);
 			
 			// Augmentation String
@@ -80,7 +80,7 @@ class EhFrame{
 				if($c){
 					$augmentationString .= $data;
 				}
-				$pos += 1;
+				$pos++;
 				#print "as: '$data' ".ord($data)."\n";
 				#sleep(1);
 			}while($c);

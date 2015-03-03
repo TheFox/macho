@@ -26,5 +26,4 @@ class LoadCommandTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($binary, $cmd->getBinary());
 	}
 	
-	
 }
