@@ -12,14 +12,11 @@ COMPOSER = ./composer.phar
 COMPOSER_DEV ?= --dev
 
 
-.PHONY: all install test test_phpcs test_phpunit test_phpunit_cc test_clean release clean clean_release clean_all
+.PHONY: all install test test_phpcs test_phpunit test_phpunit_cc test_clean release clean clean_all
 
 all: install test examples/example1 examples/example2
 
 install: $(VENDOR) config.sh
-
-install_release: $(COMPOSER)
-	$(MAKE) install COMPOSER_DEV=--no-dev
 
 update: $(COMPOSER)
 	$(COMPOSER) selfupdate
@@ -40,9 +37,6 @@ test_phpunit_cc: build
 test_clean:
 	$(RM) test_data
 
-release: release.sh
-	./release.sh
-
 clean: test_clean
 	$(RM) composer.lock $(COMPOSER)
 	$(RM) vendor/*
@@ -52,11 +46,7 @@ clean_data:
 	$(RM) data/*
 	$(RM) data
 
-clean_release: clean_data
-	$(RM) composer.lock $(COMPOSER)
-	$(RM) log pid
-
-clean_all: clean clean_data clean_release
+clean_all: clean clean_data
 
 $(VENDOR): $(COMPOSER)
 	$(COMPOSER) install $(COMPOSER_PREFER_SOURCE) --no-interaction $(COMPOSER_DEV)
