@@ -3,7 +3,13 @@
 namespace TheFox\MachO;
 
 // /usr/include//macho-o/loader.h
+define(__NAMESPACE__.'\MH_MAGIC', 0xfeedface);
+define(__NAMESPACE__.'\MH_MAGIC_64', 0xfeedfacf);
+
 define(__NAMESPACE__.'\LC_REQ_DYLD', 0x80000000);
+define(__NAMESPACE__.'\LC_SEGMENT', 0x1);
+define(__NAMESPACE__.'\LC_THREAD', 0x4);
+define(__NAMESPACE__.'\LC_UNIXTHREAD', 0x5);
 define(__NAMESPACE__.'\LC_SEGMENT_64', 0x19);
 define(__NAMESPACE__.'\LC_MAIN', 0x28 | LC_REQ_DYLD);
 

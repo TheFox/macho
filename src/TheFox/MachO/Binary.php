@@ -113,73 +113,79 @@ class Binary{
 		$fh = fopen($this->path, 'r');
 		if($fh){
 			
-			$data = fread($fh, 4);
+			$data = fread($fh, 4); // magic
 			$data = unpack('H*', strrev($data));
+			$this->magic = hexdec($data[1]);
 			
-			if($data[1] != 'feedfacf'){
-				fclose($fh);
-				throw new RuntimeException('Unknown file type.', 30);
-			}
-			$this->magic = '0x'.$data[1];
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->cpuType = hexdec($data[1]);
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->cpuSubtype = hexdec($data[1]) & ~\TheFox\MachO\CPU_SUBTYPE_LIB64;
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->fileType = hexdec($data[1]);
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->nCmds = hexdec($data[1]);
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->sizeOfCmds = hexdec($data[1]);
-			
-			$data = fread($fh, 4);
-			$data = unpack('H*', strrev($data));
-			$this->flags = '0x'.$data[1];
-			
-			if($this->cpuType | \TheFox\MachO\CPU_ARCH_ABI64){
-				// reserved
-				$data = fread($fh, 4);
-			}
-			
-			for($cmd = 0; $cmd < $this->nCmds; $cmd++){
-				$cmdsData = fread($fh, 4); // cmd
-				$type = unpack('H*', strrev($cmdsData));
-				$type = hexdec($type[1]);
+			if($this->magic == \TheFox\MachO\MH_MAGIC
+				|| $this->magic == \TheFox\MachO\MH_MAGIC_64){
 				
-				$cmdsData = fread($fh, 4); // cmdsize
-				$len = unpack('H*', strrev($cmdsData));
-				$len = hexdec($len[1]);
+				$data = fread($fh, 4); // cputype
+				$data = unpack('H*', strrev($data));
+				$this->cpuType = hexdec($data[1]);
 				
-				$cmdsData = fread($fh, $len - 8);
-				$lcmd = LoadCommand::fromBinaryWithoutHead($this, $type, $len, $cmdsData);
-				if($lcmd){
-					$this->loadCommands[(string)$lcmd] = $lcmd;
+				$data = fread($fh, 4); // cpusubtype
+				$data = unpack('H*', strrev($data));
+				#$this->cpuSubtype = hexdec($data[1]) & ~\TheFox\MachO\CPU_SUBTYPE_LIB64;
+				$this->cpuSubtype = hexdec($data[1]);
+				#print "sub: 0x".dechex($this->cpuSubtype)."\n";
+				
+				$data = fread($fh, 4); // filetype
+				$data = unpack('H*', strrev($data));
+				$this->fileType = hexdec($data[1]);
+				
+				$data = fread($fh, 4); // ncmds
+				$data = unpack('H*', strrev($data));
+				$this->nCmds = hexdec($data[1]);
+				
+				$data = fread($fh, 4); // sizeofcmds
+				$data = unpack('H*', strrev($data));
+				$this->sizeOfCmds = hexdec($data[1]);
+				
+				$data = fread($fh, 4); // flags
+				$data = unpack('H*', strrev($data));
+				$this->flags = hexdec($data[1]);
+				
+				if($this->cpuType & \TheFox\MachO\CPU_ARCH_ABI64){
+					// reserved
+					$data = fread($fh, 4);
 				}
+				
+				for($cmdN = 0; $cmdN < $this->nCmds; $cmdN++){
+					$cmdsData = fread($fh, 4); // cmd
+					$cmd = unpack('H*', strrev($cmdsData));
+					$cmd = hexdec($cmd[1]);
+					
+					$cmdsData = fread($fh, 4); // cmdsize
+					$cmdsize = unpack('H*', strrev($cmdsData));
+					$cmdsize = hexdec($cmdsize[1]);
+					
+					#print 'cmd '.$cmdN.': 0x'.dechex($cmd).' 0x'.dechex($cmdsize)."\n";
+					
+					if($cmdsize > 8 && $cmdsize <= 1024){
+						$cmdsData = fread($fh, $cmdsize - 8);
+						$lcmd = LoadCommand::fromBinaryWithoutHead($this, $cmd, $cmdsize, $cmdsData);
+						if($lcmd){
+							$this->loadCommands[(string)$lcmd] = $lcmd;
+						}
+					}
+				}
+				
+				if(isset($this->loadCommands['LC_MAIN'])){
+					$this->mainEntryOffset = $this->loadCommands['LC_MAIN']->getEntryOff();
+					
+					if(isset($this->loadCommands['__TEXT'])){
+						#\Doctrine\Common\Util\Debug::dump($this->loadCommands['__TEXT'], 3);
+						$this->mainVmAddress = $this->loadCommands['__TEXT']->getVmAddr();
+						$this->mainVmAddress += $this->mainEntryOffset;
+					}
+				}
+			}
+			else{
+				throw new RuntimeException('Unknown file type.', 30);
 			}
 			
 			fclose($fh);
-			
-			if(isset($this->loadCommands['LC_MAIN'])){
-				$this->mainEntryOffset = $this->loadCommands['LC_MAIN']->getEntryOff();
-				
-				if(isset($this->loadCommands['__TEXT'])){
-					#\Doctrine\Common\Util\Debug::dump($this->loadCommands['__TEXT'], 3);
-					$this->mainVmAddress = $this->loadCommands['__TEXT']->getVmAddr();
-					$this->mainVmAddress += $this->mainEntryOffset;
-				}
-			}
-			#print 'mainEntryOffset: 0x'.dechex($this->mainEntryOffset).PHP_EOL;
-			#print 'mainVmAddress: 0x'.dechex($this->mainVmAddress).PHP_EOL;
 		}
 	}
 	

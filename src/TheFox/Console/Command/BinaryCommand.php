@@ -56,13 +56,13 @@ class BinaryCommand extends BasicCommand{
 				$output->writeln('path: '.$binary->getPath());
 			}
 			if($all || $input->hasOption('magic') && $input->getOption('magic')){
-				$output->writeln('magic: '.$binary->getMagic());
+				$output->writeln('magic: '.dechex($binary->getMagic()));
 			}
 			if($all || $input->hasOption('cpu') && $input->getOption('cpu')){
 				$abi64 = 0;
-				$abi64 = $binary->getCpuType() & \TheFox\MachO\CPU_TYPE_X86_64;
-				$out = 'cpu: '.dechex($binary->getCpuType()).' ';
-				$out .= $binary->getCpuSubtype().' ';
+				$abi64 = $binary->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64;
+				$out = 'cpu: 0x'.dechex($binary->getCpuType()).' ';
+				$out .= '0x'.dechex($binary->getCpuSubtype()).' ';
 				$out .= ($abi64 ? '64' : '32').'-bit';
 				$output->writeln($out);
 			}

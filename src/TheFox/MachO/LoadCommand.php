@@ -36,7 +36,12 @@ class LoadCommand{
 	public static function fromBinaryWithoutHead($binary, $cmd, $length, $bin){
 		$lcmd = null;
 		
-		if($cmd == \TheFox\MachO\LC_SEGMENT_64){
+		$archLen = 4;
+		if($binary->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64){
+			$archLen = 8;
+		}
+		
+		if($cmd == \TheFox\MachO\LC_SEGMENT || $cmd == \TheFox\MachO\LC_SEGMENT_64){
 			$lcmd = new LoadCommandSegment();
 			$lcmd->setBinary($binary);
 			$lcmd->setCmd($cmd);
@@ -47,26 +52,26 @@ class LoadCommand{
 			$val = strstr($data, "\0", true);
 			$lcmd->setName($val);
 			
-			$data = substr($bin, 0, 8); // vmaddr
-			$bin = substr($bin, 8);
+			$data = substr($bin, 0, $archLen); // vmaddr
+			$bin = substr($bin, $archLen);
 			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setVmAddr($val);
 			
-			$data = substr($bin, 0, 8); // vmsize
-			$bin = substr($bin, 8);
+			$data = substr($bin, 0, $archLen); // vmsize
+			$bin = substr($bin, $archLen);
 			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setVmSize($val);
 			
-			$data = substr($bin, 0, 8); // fileoff
-			$bin = substr($bin, 8);
+			$data = substr($bin, 0, $archLen); // fileoff
+			$bin = substr($bin, $archLen);
 			$val = unpack('H*', strrev($data));
 			$val = hexdec($val[1]);
 			$lcmd->setFileOff($val);
 			
-			$data = substr($bin, 0, 8); // filesize
-			$bin = substr($bin, 8);
+			$data = substr($bin, 0, $archLen); // filesize
+			$bin = substr($bin, $archLen);
 			
 			$data = substr($bin, 0, 4); // maxprot
 			$bin = substr($bin, 4);
@@ -100,29 +105,16 @@ class LoadCommand{
 				$data = substr($bin, 0, 16); // segname
 				$bin = substr($bin, 16);
 				
-				$addr = 0;
-				$size = 0;
-				if($lcmd->getBinary()->getCpuType() | \TheFox\MachO\CPU_ARCH_ABI64){
-					$data = substr($bin, 0, 8); // addr
-					$bin = substr($bin, 8);
-					$addr = unpack('H*', strrev($data));
-					
-					$data = substr($bin, 0, 8); // size
-					$bin = substr($bin, 8);
-					$size = unpack('H*', strrev($data));
-				}
-				else{
-					$data = substr($bin, 0, 4); // addr
-					$bin = substr($bin, 4);
-					$addr = unpack('H*', strrev($data));
-					
-					$data = substr($bin, 0, 4); // size
-					$bin = substr($bin, 4);
-					$size = unpack('H*', strrev($data));
-				}
+				$data = substr($bin, 0, $archLen); // addr
+				$bin = substr($bin, $archLen);
+				$addr = unpack('H*', strrev($data));
 				$addr = hexdec($addr[1]);
-				$size = hexdec($size[1]);
 				$sectionO->setAddr($addr);
+				
+				$data = substr($bin, 0, $archLen); // size
+				$bin = substr($bin, $archLen);
+				$size = unpack('H*', strrev($data));
+				$size = hexdec($size[1]);
 				$sectionO->setSize($size);
 				
 				$data = substr($bin, 0, 4); // offset
@@ -155,7 +147,7 @@ class LoadCommand{
 				$data = substr($bin, 0, 4); // reserved2
 				$bin = substr($bin, 4);
 				
-				if($lcmd->getBinary()->getCpuType() | \TheFox\MachO\CPU_ARCH_ABI64){
+				if($lcmd->getBinary()->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64){
 					$data = substr($bin, 0, 4); // reserved3
 					$bin = substr($bin, 4);
 				}
@@ -186,7 +178,6 @@ class LoadCommand{
 		}
 		else{
 			$skipLen = $length - 4 - 4;
-			#print '-> cmd: '.$cmd.': '.$cmd.' ('.(dechex(\TheFox\MachO\LC_MAIN)).') '.$length.' "'.$segname.'"'.PHP_EOL;
 			$data = substr($bin, 0, $skipLen);
 			$bin = substr($bin, $skipLen);
 		}
