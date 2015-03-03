@@ -1,9 +1,9 @@
 {
 	"name": "thefox/macho",
-	"description": "PHP script for modifying Mach-O 64-bit executable x86_64 files.",
+	"description": "PHP script for modifying Mach-O executable i386 and x86_64 files.",
 	"license": "GPL-3.0",
 	"type": "project",
-	"keywords": [ "Mach", "MachO", "Binary", "x86_64" ],
+	"keywords": [ "Mach", "MachO", "Binary", "x86", "i386", "x86_64", "x86-64" ],
 	"homepage": "http://fox21.at",
 	"authors": [
 		{
