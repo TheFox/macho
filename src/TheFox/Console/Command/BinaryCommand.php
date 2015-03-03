@@ -96,8 +96,6 @@ class BinaryCommand extends BasicCommand{
 					}
 				}
 			}
-			
-			\Doctrine\Common\Util\Debug::dump($binary->getEhframe(), 1);
 		}
 		
 		#$this->executePost();

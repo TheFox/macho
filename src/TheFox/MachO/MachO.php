@@ -15,8 +15,6 @@ define(__NAMESPACE__.'\CPU_TYPE_ARM', 12);
 define(__NAMESPACE__.'\CPU_TYPE_ARM64', CPU_TYPE_ARM | CPU_ARCH_ABI64);
 define(__NAMESPACE__.'\CPU_SUBTYPE_LIB64', 0x80000000);
 
-define(__NAMESPACE__.'\C1', 1);
-define(__NAMESPACE__.'\C2', 1 + CPU_TYPE_X86);
 
 class MachO{
 	
