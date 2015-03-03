@@ -114,7 +114,7 @@ class Binary{
 		if($fh){
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			
 			if($data[1] != 'feedfacf'){
 				fclose($fh);
@@ -123,27 +123,27 @@ class Binary{
 			$this->magic = '0x'.$data[1];
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->cpuType = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->cpuSubtype = hexdec($data[1]) & ~\TheFox\MachO\CPU_SUBTYPE_LIB64;
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->fileType = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->nCmds = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->sizeOfCmds = hexdec($data[1]);
 			
 			$data = fread($fh, 4);
-			$data = unpack('H*', $data[3].$data[2].$data[1].$data[0]);
+			$data = unpack('H*', strrev($data));
 			$this->flags = '0x'.$data[1];
 			
 			if($this->cpuType | \TheFox\MachO\CPU_ARCH_ABI64){
@@ -153,11 +153,11 @@ class Binary{
 			
 			for($cmd = 0; $cmd < $this->nCmds; $cmd++){
 				$cmdsData = fread($fh, 4); // cmd
-				$type = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+				$type = unpack('H*', strrev($cmdsData));
 				$type = hexdec($type[1]);
 				
 				$cmdsData = fread($fh, 4); // cmdsize
-				$len = unpack('H*', $cmdsData[3].$cmdsData[2].$cmdsData[1].$cmdsData[0]);
+				$len = unpack('H*', strrev($cmdsData));
 				$len = hexdec($len[1]);
 				
 				$cmdsData = fread($fh, $len - 8);
