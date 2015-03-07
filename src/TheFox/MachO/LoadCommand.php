@@ -158,6 +158,9 @@ class LoadCommand{
 			
 			#$lcmd->setSections($sections);
 		}
+		/*elseif($cmd == \TheFox\MachO\LC_UNIXTHREAD){
+			print '-> cmd: '.$cmd.' 0x'.dechex(\TheFox\MachO\LC_UNIXTHREAD).' '.$length.''.PHP_EOL;
+		}*/
 		elseif($cmd == \TheFox\MachO\LC_MAIN){
 			$lcmd = new LoadCommandEntryPoint();
 			$lcmd->setBinary($binary);
