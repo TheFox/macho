@@ -1,5 +1,9 @@
 <?php
 
+namespace TheFox\Test;
+
+use PHPUnit_Framework_TestCase;
+
 use TheFox\MachO\Binary;
 
 class BinaryTest extends PHPUnit_Framework_TestCase{
@@ -27,6 +31,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	 * @expectedExceptionCode 20
 	 */
 	public function testConstructRuntimeException20(){
+		#\Doctrine\Common\Util\Debug::dump(getcwd());
 		$binary = new Binary('test_data/test_prog');
 		$binary->setExpectedFileSize(24);
 		$binary->analyze();
@@ -47,7 +52,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase{
 	 * @expectedExceptionCode 30
 	 */
 	public function testConstructRuntimeException30(){
-		$binary = new Binary('tests/BinaryTest.php');
+		$binary = new Binary('application.php');
 		$binary->analyze();
 	}
 	

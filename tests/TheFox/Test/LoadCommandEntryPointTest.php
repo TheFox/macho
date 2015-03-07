@@ -1,5 +1,9 @@
 <?php
 
+namespace TheFox\Test;
+
+use PHPUnit_Framework_TestCase;
+
 use TheFox\MachO\LoadCommandEntryPoint;
 
 class LoadCommandEntryPointTest extends PHPUnit_Framework_TestCase{

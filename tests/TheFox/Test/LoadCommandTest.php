@@ -1,5 +1,9 @@
 <?php
 
+namespace TheFox\Test;
+
+use PHPUnit_Framework_TestCase;
+
 use TheFox\MachO\LoadCommand;
 use TheFox\MachO\Binary;
 
