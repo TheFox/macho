@@ -20,6 +20,7 @@ Another way to print general informations about a binary executable is to use `d
 ## Links
 - [Blog Post about Mach-O project](http://blog.fox21.at/2015/02/14/mach-o.html)
 - [Packagist Package](https://packagist.org/packages/thefox/macho)
+- [Travis CI Repository](https://travis-ci.org/TheFox/macho)
 
 ## Examples
 Look into [examples](examples) directory to see code examples how to use this in your own project.
