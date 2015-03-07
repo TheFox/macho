@@ -46,12 +46,4 @@ class BinaryTest extends BinaryOsxTest{
 		$this->assertEquals('test_data/test_prog', $binary->getPath());
 	}
 	
-	/*public function testGetExpectedFileSize(){
-		$this->assertTrue(true);
-	}
-	
-	public function testSetExpectedMd5sum(){
-		$this->assertTrue(true);
-	}*/
-	
 }
