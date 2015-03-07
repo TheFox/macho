@@ -42,15 +42,16 @@ class BinaryTest extends BinaryOsxTest{
 	}
 	
 	public function testGetPath(){
-		$this->assertTrue(true);
+		$binary = new Binary('test_data/test_prog');
+		$this->assertEquals('test_data/test_prog', $binary->getPath());
 	}
 	
-	public function testGetExpectedFileSize(){
+	/*public function testGetExpectedFileSize(){
 		$this->assertTrue(true);
 	}
 	
 	public function testSetExpectedMd5sum(){
 		$this->assertTrue(true);
-	}
+	}*/
 	
 }
