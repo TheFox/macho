@@ -20,13 +20,21 @@
 	verbose="true">
 	
 	<testsuites>
-		<testsuite name="My Test Suite">
+		<testsuite name="osx">
 			<file>tests/TheFox/Test/BinaryTest.php</file>
 			<file>tests/TheFox/Test/LoadCommandEntryPointTest.php</file>
 			<file>tests/TheFox/Test/LoadCommandSegmentTest.php</file>
 			<file>tests/TheFox/Test/LoadCommandTest.php</file>
 			<file>tests/TheFox/Test/LoadSectionTest.php</file>
 			<file>tests/TheFox/Test/MachOTest.php</file>
+		</testsuite>
+		<testsuite name="linux">
+			<file>tests/TheFox/Test/Linux/BinaryTest.php</file>
+			<file>tests/TheFox/Test/Linux/LoadCommandEntryPointTest.php</file>
+			<file>tests/TheFox/Test/Linux/LoadCommandSegmentTest.php</file>
+			<file>tests/TheFox/Test/Linux/LoadCommandTest.php</file>
+			<file>tests/TheFox/Test/Linux/LoadSectionTest.php</file>
+			<file>tests/TheFox/Test/Linux/MachOTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>

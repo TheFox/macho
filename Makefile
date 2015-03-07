@@ -8,6 +8,7 @@ PHPCS = vendor/bin/phpcs
 PHPCS_STANDARD = vendor/thefox/phpcsrs/Standards/TheFox
 PHPCS_REPORT = --report=full --report-width=160
 PHPUNIT = vendor/bin/phpunit
+PHPUNIT_TESTSUITE ?= osx
 COMPOSER = ./composer.phar
 COMPOSER_DEV ?= 
 
@@ -28,8 +29,8 @@ test_phpcs: $(PHPCS) $(PHPCS_STANDARD)
 	$(PHPCS) -v -s -p $(PHPCS_REPORT) --standard=$(PHPCS_STANDARD) src tests bootstrap.php
 
 test_phpunit: $(PHPUNIT) phpunit.xml test_data test_data/test_prog
-	TEST=true $(PHPUNIT) $(PHPUNIT_COVERAGE_HTML) $(PHPUNIT_COVERAGE_XML) $(PHPUNIT_COVERAGE_CLOVER)
-	#$(MAKE) test_clean
+	TEST=true $(PHPUNIT) --testsuite $(PHPUNIT_TESTSUITE) $(PHPUNIT_COVERAGE_HTML) $(PHPUNIT_COVERAGE_XML) $(PHPUNIT_COVERAGE_CLOVER)
+	$(MAKE) test_clean
 
 test_phpunit_cc: build
 	$(MAKE) test_phpunit PHPUNIT_COVERAGE_HTML="--coverage-html build/report"
