@@ -21,12 +21,12 @@
 	
 	<testsuites>
 		<testsuite name="osx">
-			<file>tests/TheFox/Test/BinaryTest.php</file>
-			<file>tests/TheFox/Test/LoadCommandEntryPointTest.php</file>
-			<file>tests/TheFox/Test/LoadCommandSegmentTest.php</file>
-			<file>tests/TheFox/Test/LoadCommandTest.php</file>
-			<file>tests/TheFox/Test/LoadSectionTest.php</file>
-			<file>tests/TheFox/Test/MachOTest.php</file>
+			<file>tests/TheFox/Test/Osx/BinaryTest.php</file>
+			<file>tests/TheFox/Test/Osx/LoadCommandEntryPointTest.php</file>
+			<file>tests/TheFox/Test/Osx/LoadCommandSegmentTest.php</file>
+			<file>tests/TheFox/Test/Osx/LoadCommandTest.php</file>
+			<file>tests/TheFox/Test/Osx/LoadSectionTest.php</file>
+			<file>tests/TheFox/Test/Osx/MachOTest.php</file>
 		</testsuite>
 		<testsuite name="linux">
 			<file>tests/TheFox/Test/Linux/BinaryTest.php</file>

@@ -1,6 +1,6 @@
 <?php
 
-namespace TheFox\Test;
+namespace TheFox\Test\Osx;
 
 use PHPUnit_Framework_TestCase;
 
@@ -8,6 +8,12 @@ use TheFox\MachO\LoadCommandSegment;
 use TheFox\MachO\LoadSection;
 
 class LoadCommandSegmentTest extends PHPUnit_Framework_TestCase{
+	
+	public function testToString(){
+		$cmd = new LoadCommandSegment();
+		$cmd->setName('test1');
+		$this->assertEquals('test1', (string)$cmd);
+	}
 	
 	public function testSetName(){
 		$seg = new LoadCommandSegment();

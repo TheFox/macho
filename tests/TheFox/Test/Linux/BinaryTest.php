@@ -2,7 +2,7 @@
 
 namespace TheFox\Test\Linux;
 
-use TheFox\Test\BinaryTest as BinaryOsxTest;
+use TheFox\Test\Osx\BinaryTest as BinaryOsxTest;
 use TheFox\MachO\Binary;
 
 class BinaryTest extends BinaryOsxTest{

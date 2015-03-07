@@ -2,7 +2,7 @@
 
 namespace TheFox\Test\Linux;
 
-use TheFox\Test\LoadCommandSegmentTest as LoadCommandSegmentOsxTest;
+use TheFox\Test\Osx\LoadCommandSegmentTest as LoadCommandSegmentOsxTest;
 
 class LoadCommandSegmentTest extends LoadCommandSegmentOsxTest{
 	

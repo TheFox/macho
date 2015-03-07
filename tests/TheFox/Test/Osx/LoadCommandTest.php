@@ -1,6 +1,6 @@
 <?php
 
-namespace TheFox\Test;
+namespace TheFox\Test\Osx;
 
 use PHPUnit_Framework_TestCase;
 

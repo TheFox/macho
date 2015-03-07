@@ -2,7 +2,7 @@
 
 namespace TheFox\Test\Linux;
 
-use TheFox\Test\LoadCommandTest as LoadCommandOsxTest;
+use TheFox\Test\Osx\LoadCommandTest as LoadCommandOsxTest;
 
 class LoadCommandTest extends LoadCommandOsxTest{
 	
