@@ -203,12 +203,10 @@ class Binary{
 					
 					#print 'cmd '.$cmdN.': 0x'.dechex($cmd).' 0x'.dechex($cmdsize)."\n";
 					
-					if($cmdsize > 8 && $cmdsize <= 1024){
-						$cmdsData = fread($fh, $cmdsize - 8);
-						$lcmd = LoadCommand::fromBinaryWithoutHead($this, $cmd, $cmdsize, $cmdsData);
-						if($lcmd){
-							$this->loadCommands[(string)$lcmd] = $lcmd;
-						}
+					$cmdsData = fread($fh, $cmdsize - 8);
+					$lcmd = LoadCommand::fromBinaryWithoutHead($this, $cmd, $cmdsize, $cmdsData);
+					if($lcmd){
+						$this->loadCommands[(string)$lcmd] = $lcmd;
 					}
 				}
 				
@@ -234,6 +232,8 @@ class Binary{
 	 * @codeCoverageIgnore
 	 */
 	public function write($segmentName, $sectionName, $offset, $data){
+		$rv = null;
+		
 		$mode = 'r+';
 		$fh = fopen($this->path, $mode);
 		if($fh){
@@ -249,12 +249,14 @@ class Binary{
 				if($pos){
 					rewind($fh);
 					fseek($fh, $pos);
-					fwrite($fh, $data);
+					$rv = fwrite($fh, $data);
 				}
 			}
 			else{ print "seg '$segmentName' not found\n"; }
 			fclose($fh);
 		}
+		
+		return $rv;
 	}
 	
 	/**
