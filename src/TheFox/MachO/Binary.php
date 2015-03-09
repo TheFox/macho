@@ -252,7 +252,7 @@ class Binary{
 					fwrite($fh, $data);
 				}
 			}
-			
+			else{ print "seg '$segmentName' not found\n"; }
 			fclose($fh);
 		}
 	}

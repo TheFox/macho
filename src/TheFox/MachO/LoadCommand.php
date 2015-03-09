@@ -38,10 +38,13 @@ class LoadCommand{
 		
 		$archLen = 4;
 		if($binary->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64){
+			#print '  -> ABI64'."\n";
 			$archLen = 8;
 		}
 		
 		if($cmd == \TheFox\MachO\LC_SEGMENT || $cmd == \TheFox\MachO\LC_SEGMENT_64){
+			#print '  -> LC_SEGMENT'."\n";
+			
 			$lcmd = new LoadCommandSegment();
 			$lcmd->setBinary($binary);
 			$lcmd->setCmd($cmd);
@@ -51,6 +54,7 @@ class LoadCommand{
 			$bin = substr($bin, 16);
 			$val = strstr($data, "\0", true);
 			$lcmd->setName($val);
+			#print '  -> name: '.$val."\n";
 			
 			$data = substr($bin, 0, $archLen); // vmaddr
 			$bin = substr($bin, $archLen);
@@ -89,10 +93,13 @@ class LoadCommand{
 			$data = substr($bin, 0, 4); // flags
 			$bin = substr($bin, 4);
 			
-			#print '-> cmd: '.$cmd.' '.$len.': '.$fileoff.' 0x'.dechex($vmaddr).' 0x'.dechex($vmsize).' "'.$segname.'"'.PHP_EOL;
+			#print '  -> cmd: 0x'.dechex($cmd).' sections='.$nsects.PHP_EOL;
+			#print '  -> cmd: '.$cmd.' '.$len.': 0x'.dechex($vmaddr).' 0x'.dechex($vmsize).' "'.$segname.'"'.PHP_EOL;
 			
 			#$sections = array();
 			for($sectionC = 0; $sectionC < $nsects; $sectionC++){
+				#print '    -> sec'."\n";
+				
 				$sectionO = new LoadSection();
 				$sectionO->setLoadCommand($lcmd);
 				
@@ -159,7 +166,7 @@ class LoadCommand{
 			#$lcmd->setSections($sections);
 		}
 		/*elseif($cmd == \TheFox\MachO\LC_UNIXTHREAD){
-			print '-> cmd: '.$cmd.' 0x'.dechex(\TheFox\MachO\LC_UNIXTHREAD).' '.$length.''.PHP_EOL;
+			print '  -> cmd: '.$cmd.' 0x'.dechex(\TheFox\MachO\LC_UNIXTHREAD).' '.$length.''.PHP_EOL;
 		}*/
 		elseif($cmd == \TheFox\MachO\LC_MAIN){
 			$lcmd = new LoadCommandEntryPoint();
@@ -183,6 +190,8 @@ class LoadCommand{
 			$skipLen = $length - 4 - 4;
 			$data = substr($bin, 0, $skipLen);
 			$bin = substr($bin, $skipLen);
+			
+			#print '  -> skip: '.$skipLen."\n";
 		}
 		#print PHP_EOL;
 		
