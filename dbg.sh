@@ -52,6 +52,10 @@ echo "create text '$section' section debug informations"
 txt=$dst/section-$segment-$section.txt
 $OTOOL -vVtjC $path > $txt
 
+echo "create text '$section' section plain"
+txt=$dst/section-$segment-$section-plain.txt
+$OTOOL -t $path | tail -n +3 | awk '{ print $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14 $15 $16 $17 }' | perl -e "while(<>){s/\n//g;print}" > $txt
+
 for section in __stubs __stub_helper __cstring __ustring __objc_classname __objc_methname __objc_methtype __const __gcc_except_tab __unwind_info __eh_frame; do
 	echo "create text '$section' section debug informations"
 	txt=$dst/section-$segment-$section.txt
