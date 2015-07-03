@@ -36,6 +36,11 @@ if [ "$path" = "" ]; then
 	exit 3
 fi
 
+if [[ -d $dst ]]; then
+	echo "dst '$dst' exists"
+	exit 1
+fi
+
 mkdir -p $dst
 echo "name: $name ($dst)"
 echo "path: $path"
