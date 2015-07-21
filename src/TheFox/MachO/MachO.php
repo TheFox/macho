@@ -1,5 +1,7 @@
 <?php
 
+// Macho macho man, I gotta be a macho man.
+
 namespace TheFox\MachO;
 
 // @codeCoverageIgnoreStart
