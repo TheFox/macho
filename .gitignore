@@ -1,12 +1,11 @@
+build
 composer.lock
 composer.phar
-build
+config.sh
+debug
 log
 pid
 releases
-vendor
 test_data
-config.sh
-debug
+vendor
 *.o
-*.txt
