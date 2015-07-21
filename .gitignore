@@ -7,5 +7,6 @@ log
 pid
 releases
 test_data
+tmp
 vendor
 *.o
