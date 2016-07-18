@@ -15,13 +15,13 @@
 	"require": {
 		"php": ">=5.3",
 		"liip/process-manager": "~1.0",
+		"symfony/filesystem": "~2.7",
 		"thefox/utilities": "~1.9",
 		"thefox/assembly": "~0.2"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.1",
 		"doctrine/common": "~2.4",
-		"satooshi/php-coveralls": "~1.0",
 		"thefox/phpcsrs": "~1.0"
 	},
 	"autoload": {
