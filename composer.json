@@ -13,7 +13,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3",
+		"php": "~5.3 || ~7.0",
 		"liip/process-manager": "~1.0",
 		"symfony/filesystem": "~2.7",
 		"symfony/console": "~2.8",
