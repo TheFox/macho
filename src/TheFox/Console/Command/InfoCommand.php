@@ -10,9 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use TheFox\MachO\MachO;
 
-/**
- * @codeCoverageIgnore
- */
 class InfoCommand extends BasicCommand{
 	
 	public function getLogfilePath(){

@@ -13,9 +13,6 @@ use TheFox\MachO\Binary;
 use TheFox\MachO\LoadCommandSegment;
 use TheFox\MachO\LoadCommandEntryPoint;
 
-/**
- * @codeCoverageIgnore
- */
 class BinaryCommand extends BasicCommand{
 	
 	public function getLogfilePath(){

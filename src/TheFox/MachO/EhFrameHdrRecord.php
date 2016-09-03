@@ -2,9 +2,6 @@
 
 namespace TheFox\MachO;
 
-/**
- * @codeCoverageIgnore
- */
 class EhFrameHdrRecord{
 	
 	private $length;

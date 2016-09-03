@@ -4,18 +4,19 @@
 	"license": "GPL-3.0",
 	"type": "project",
 	"keywords": [ "Mach", "MachO", "Binary", "x86", "i386", "x86_64", "x86-64" ],
-	"homepage": "http://fox21.at",
+	"homepage": "https://fox21.at",
 	"authors": [
 		{
 			"name": "Christian Mayer",
 			"email": "christian@fox21.at",
-			"homepage": "http://fox21.at"
+			"homepage": "https://fox21.at"
 		}
 	],
 	"require": {
 		"php": ">=5.3",
 		"liip/process-manager": "~1.0",
 		"symfony/filesystem": "~2.7",
+		"symfony/console": "~3.1",
 		"thefox/utilities": "~1.9",
 		"thefox/assembly": "~0.2"
 	},
@@ -34,16 +35,5 @@
 		"branch-alias": {
 			"dev-master": "1.x.x-dev"
 		}
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"echo post-install-cmd",
-			"chmod a+x application.php",
-			"php bootstrap.php"
-		],
-		"post-update-cmd": [
-			"echo post-update-cmd",
-			"php bootstrap.php"
-		]
 	}
 }
