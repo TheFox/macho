@@ -26,6 +26,6 @@ define(__NAMESPACE__.'\CPU_SUBTYPE_LIB64', 0x80000000);
 class MachO{
 	
 	const NAME = 'MachO';
-	const VERSION = '0.4.1-dev';
+	const VERSION = '0.4.1';
 	
 }
