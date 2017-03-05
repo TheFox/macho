@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Liip\ProcessManager\ProcessManager;
 use Liip\ProcessManager\PidFile;
-
 use TheFox\Logger\Logger;
 use TheFox\Logger\StreamHandler;
 

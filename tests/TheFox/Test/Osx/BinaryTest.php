@@ -3,7 +3,6 @@
 namespace TheFox\Test\Osx;
 
 use PHPUnit_Framework_TestCase;
-
 use TheFox\MachO\Binary;
 
 class BinaryTest extends PHPUnit_Framework_TestCase{

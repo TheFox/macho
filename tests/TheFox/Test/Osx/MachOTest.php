@@ -3,7 +3,6 @@
 namespace TheFox\Test\Osx;
 
 use PHPUnit_Framework_TestCase;
-
 use TheFox\MachO\MachO;
 
 class MachOTest extends PHPUnit_Framework_TestCase{

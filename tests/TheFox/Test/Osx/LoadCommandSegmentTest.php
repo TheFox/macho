@@ -3,7 +3,6 @@
 namespace TheFox\Test\Osx;
 
 use PHPUnit_Framework_TestCase;
-
 use TheFox\MachO\LoadCommandSegment;
 use TheFox\MachO\LoadSection;
 

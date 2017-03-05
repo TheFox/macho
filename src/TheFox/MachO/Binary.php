@@ -3,7 +3,6 @@
 namespace TheFox\MachO;
 
 use RuntimeException;
-
 use TheFox\Utilities\Bin;
 
 class Binary{
