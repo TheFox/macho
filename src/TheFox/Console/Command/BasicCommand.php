@@ -125,14 +125,14 @@ class BasicCommand extends Command{
 	}
 	
 	private function stdStreamsSetup(){
-		global $STDIN, $STDOUT, $STDERR;
+		// global $STDIN, $STDOUT, $STDERR;
 		
 		fclose(STDIN);
 		fclose(STDOUT);
 		fclose(STDERR);
-		$STDIN = fopen('/dev/null', 'r');
-		$STDOUT = fopen('/dev/null', 'wb');
-		$STDERR = fopen('/dev/null', 'wb');
+		// $STDIN = fopen('/dev/null', 'r');
+		// $STDOUT = fopen('/dev/null', 'wb');
+		// $STDERR = fopen('/dev/null', 'wb');
 	}
 	
 }

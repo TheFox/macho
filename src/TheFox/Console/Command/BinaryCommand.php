@@ -65,7 +65,7 @@ class BinaryCommand extends BasicCommand{
 				$output->writeln('filetype: '.$binary->getFileType());
 			}
 			if($all || $input->hasOption('ncmds') && $input->getOption('ncmds')){
-				$output->writeln('ncmds: '.$binary->getNCmds());
+				$output->writeln('ncmds: '.$binary->getNcmds());
 			}
 			if($all || $input->hasOption('sizeofcmds') && $input->getOption('sizeofcmds')){
 				$output->writeln('sizeofcmds: '.$binary->getSizeOfCmds());
