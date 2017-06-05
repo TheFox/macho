@@ -4,6 +4,7 @@ namespace TheFox\MachO;
 
 class EhFrameHdrFdeRecord extends EhFrameHdrRecord
 {
+    // @todo phpdocblocks
     private $pcBegin;
     private $pcRange;
     private $augmentationLength;

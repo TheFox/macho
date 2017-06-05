@@ -4,6 +4,9 @@ namespace TheFox\MachO;
 
 class LoadCommandSegment extends LoadCommand
 {
+    /**
+     * @var string
+     */
     private $name;
     private $vmaddr;
     private $vmsize;
@@ -14,19 +17,25 @@ class LoadCommandSegment extends LoadCommand
     private $nsects;
     #private $flags;
 
-    private $sections = array();
+    /**
+     * @var array
+     */
+    private $sections = [];
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->getName();
     }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -71,7 +80,7 @@ class LoadCommandSegment extends LoadCommand
         return $this->nsects;
     }
 
-    public function setSections($sections)
+    public function setSections(array $sections)
     {
         $this->sections = $sections;
     }
@@ -82,12 +91,12 @@ class LoadCommandSegment extends LoadCommand
         $this->sections[$name] = $section;
     }
 
-    public function getSections()
+    public function getSections(): array
     {
         return $this->sections;
     }
 
-    public function getSectionByName($name)
+    public function getSectionByName($name): LoadSection
     {
         return $this->sections[$name];
     }

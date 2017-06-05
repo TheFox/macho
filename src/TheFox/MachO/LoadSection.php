@@ -4,90 +4,162 @@ namespace TheFox\MachO;
 
 class LoadSection
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var int
+     */
     private $addr;
+
+    /**
+     * @var int
+     */
     private $size;
+
+    /**
+     * @var int
+     */
     private $offset;
+
+    /**
+     * @var int
+     */
     private $reloff;
+
+    /**
+     * @var int
+     */
     private $nreloc;
 
-    // parent
+    /**
+     * Parent
+     *
+     * @var LoadCommand
+     */
     private $loadCommand;
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
-        if ($this->getName()) {
-            return $this->getName();
+        if ($this->name) {
+            return $this->name;
         }
         return '0x' . dechex($this->getAddr());
     }
 
-    public function setName($name)
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setAddr($addr)
+    /**
+     * @param int $addr
+     */
+    public function setAddr(int $addr)
     {
         $this->addr = $addr;
     }
 
-    public function getAddr()
+    /**
+     * @return int
+     */
+    public function getAddr(): int
     {
         return $this->addr;
     }
 
-    public function setSize($size)
+    /**
+     * @param int $size
+     */
+    public function setSize(int $size)
     {
         $this->size = $size;
     }
 
-    public function getSize()
+    /**
+     * @return int
+     */
+    public function getSize(): int
     {
         return $this->size;
     }
 
-    public function setOffset($offset)
+    /**
+     * @param int $offset
+     */
+    public function setOffset(int $offset)
     {
         $this->offset = $offset;
     }
 
-    public function getOffset()
+    /**
+     * @return int
+     */
+    public function getOffset(): int
     {
         return $this->offset;
     }
 
-    public function setReloff($reloff)
+    /**
+     * @param int $reloff
+     */
+    public function setReloff(int $reloff)
     {
         $this->reloff = $reloff;
     }
 
-    public function getReloff()
+    /**
+     * @return int
+     */
+    public function getReloff(): int
     {
         return $this->reloff;
     }
 
-    public function setNreloc($nreloc)
+    /**
+     * @param int $nreloc
+     */
+    public function setNreloc(int $nreloc)
     {
         $this->nreloc = $nreloc;
     }
 
-    public function getNreloc()
+    /**
+     * @return int
+     */
+    public function getNreloc(): int
     {
         return $this->nreloc;
     }
 
-    public function setLoadCommand($loadCommand)
+    /**
+     * @param LoadCommand $loadCommand
+     */
+    public function setLoadCommand(LoadCommand $loadCommand)
     {
         $this->loadCommand = $loadCommand;
     }
 
-    public function getLoadCommand()
+    /**
+     * @return LoadCommand
+     */
+    public function getLoadCommand(): LoadCommand
     {
         return $this->loadCommand;
     }

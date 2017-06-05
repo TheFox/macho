@@ -2,14 +2,26 @@
 
 namespace TheFox\MachO;
 
+use TheFox\Utilities\Bin;
+
 class LoadCommand
 {
+    /**
+     * @var string
+     */
     private $cmd;
+
+    /**
+     * @var int
+     */
     private $length;
 
+    /**
+     * @var Binary
+     */
     private $binary;
 
-    public function setCmd($cmd)
+    public function setCmd(string $cmd)
     {
         $this->cmd = $cmd;
     }
@@ -19,12 +31,12 @@ class LoadCommand
         return $this->cmd;
     }
 
-    public function setLength($length)
+    public function setLength(int $length)
     {
         $this->length = $length;
     }
 
-    public function getLength()
+    public function getLength(): int
     {
         return $this->length;
     }
@@ -34,12 +46,22 @@ class LoadCommand
         $this->binary = $binary;
     }
 
-    public function getBinary()
+    /**
+     * @return Binary
+     */
+    public function getBinary(): Binary
     {
         return $this->binary;
     }
 
-    public static function fromBinaryWithoutHead($binary, $cmd, $length, $bin)
+    /**
+     * @param Binary $binary
+     * @param string $cmd
+     * @param int $length
+     * @param string $bin
+     * @return null|LoadCommandEntryPoint|LoadCommandSegment
+     */
+    public static function fromBinaryWithoutHead(Binary $binary, string $cmd, int $length, string $bin)
     {
         $lcmd = null;
 

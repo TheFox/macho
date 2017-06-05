@@ -17,7 +17,7 @@ class BasicCommand extends Command
     public $log;
     public $exit = 0;
     private $pidFile;
-    private $settings;
+    //private $settings;
 
     public function setExit($exit)
     {

@@ -4,30 +4,40 @@ namespace TheFox\MachO;
 
 class LoadCommandEntryPoint extends LoadCommand
 {
+    /**
+     * @var int
+     */
     private $entryoff;
+
+    /**
+     * @var int
+     */
     private $stacksize;
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return 'LC_MAIN';
     }
 
-    public function setEntryOff($entryoff)
+    public function setEntryOff(int $entryoff)
     {
         $this->entryoff = $entryoff;
     }
 
-    public function getEntryOff()
+    public function getEntryOff(): int
     {
         return $this->entryoff;
     }
 
-    public function setStackSize($stacksize)
+    public function setStackSize(int $stacksize)
     {
         $this->stacksize = $stacksize;
     }
 
-    public function getStackSize()
+    public function getStackSize(): int
     {
         return $this->stacksize;
     }

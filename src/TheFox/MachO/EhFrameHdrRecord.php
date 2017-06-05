@@ -4,8 +4,17 @@ namespace TheFox\MachO;
 
 class EhFrameHdrRecord
 {
+    /**
+     * @var int
+     */
     private $length;
+
+    /**
+     * @var int
+     */
     private $extLength;
+    
+    // @todo
     private $cieId;
     private $version;
     private $augmentationString;
@@ -17,22 +26,34 @@ class EhFrameHdrRecord
     private $initialInstructions;
     private $padding;
 
-    public function setLength($length)
+    /**
+     * @param int $length
+     */
+    public function setLength(int $length)
     {
         $this->length = $length;
     }
 
-    public function getLength()
+    /**
+     * @return int
+     */
+    public function getLength(): int
     {
         return $this->length;
     }
 
-    public function setExtLength($extLength)
+    /**
+     * @param int $extLength
+     */
+    public function setExtLength(int $extLength)
     {
         $this->extLength = $extLength;
     }
 
-    public function getExtLength()
+    /**
+     * @return int
+     */
+    public function getExtLength(): int
     {
         return $this->extLength;
     }

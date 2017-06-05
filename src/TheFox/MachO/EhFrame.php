@@ -8,25 +8,44 @@ use TheFox\Utilities\Leb128;
 
 class EhFrame
 {
-    private $records = array();
+    /**
+     * @var array
+     */
+    private $records = [];
+
+    /**
+     * @var Binary
+     */
     private $binary;
 
+    // @todo phpdocblocks
     public function addRecord($record)
     {
         $this->records[] = $record;
     }
 
-    public function setBinary($binary)
+    /**
+     * @param Binary $binary
+     */
+    public function setBinary(Binary $binary)
     {
         $this->binary = $binary;
     }
 
-    public function getBinary()
+    /**
+     * @return Binary
+     */
+    public function getBinary(): Binary
     {
         return $this->binary;
     }
 
-    public static function fromBinaryWithoutHead($binary, $bin)
+    /**
+     * @param Binary $binary
+     * @param string $bin
+     * @return EhFrame
+     */
+    public static function fromBinaryWithoutHead(Binary $binary, string $bin): EhFrame
     {
         $ehframe = new Ehframe();
         $ehframe->setBinary($binary);

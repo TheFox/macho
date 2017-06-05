@@ -4,6 +4,7 @@ namespace TheFox\MachO;
 
 class EhFrameHdrCfiRecord
 {
+    // @todo phpdocblocks
     private $cie;
     private $fde;
 
