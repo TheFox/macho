@@ -58,7 +58,7 @@ class BinaryCommand extends BasicCommand
                 $output->writeln('magic: ' . dechex($binary->getMagic()));
             }
             if ($all || $input->hasOption('cpu') && $input->getOption('cpu')) {
-                $abi64 = 0;
+                //$abi64 = 0;
                 $abi64 = $binary->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64;
                 $out = 'cpu: 0x' . dechex($binary->getCpuType()) . ' ';
                 $out .= '0x' . dechex($binary->getCpuSubtype()) . ' ';
