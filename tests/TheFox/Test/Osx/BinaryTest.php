@@ -2,6 +2,7 @@
 
 namespace TheFox\Test\Osx;
 
+use RuntimeException;
 use PHPUnit_Framework_TestCase;
 use TheFox\MachO\Binary;
 
@@ -34,7 +35,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase
     public function testConstructRuntimeException20()
     {
         #\Doctrine\Common\Util\Debug::dump(getcwd());
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedFileSize(24);
         $binary->analyze();
     }
@@ -45,7 +46,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructRuntimeException21()
     {
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedMd5sum('md5sum');
         $binary->analyze();
     }
@@ -62,16 +63,16 @@ class BinaryTest extends PHPUnit_Framework_TestCase
 
     public function testBasic()
     {
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->analyze();
     }
 
     public function testGetPath()
     {
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->analyze();
 
-        $this->assertEquals('test_data/test_prog', $binary->getPath());
+        $this->assertEquals('tmp/test_data/test_prog', $binary->getPath());
     }
 
     /*public function testGetMagic(){
@@ -118,7 +119,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase
 
     public function testGetExpectedFileSize()
     {
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedFileSize(24);
 
         $this->assertEquals(24, $binary->getExpectedFileSize());
@@ -126,7 +127,7 @@ class BinaryTest extends PHPUnit_Framework_TestCase
 
     public function testSetExpectedMd5sum()
     {
-        $binary = new Binary('test_data/test_prog');
+        $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedMd5sum(25);
 
         $this->assertEquals(25, $binary->getExpectedMd5sum());

@@ -1,13 +1,5 @@
-build
 CHANGELOG-*.txt
 composer.lock
 composer.phar
-config.sh
-debug
-log
-pid
-releases
-test_data
-tmp
-vendor
-*.o
+/tmp/
+/vendor/

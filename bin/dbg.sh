@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
-DATE=$(date +"%Y-%m-%d %H:%M:%S")
-SCRIPT_BASEDIR=$(dirname $0)
-DST=debug
+#DATE=$(date +"%Y-%m-%d %H:%M:%S")
+SCRIPT_BASEDIR=$(dirname "$0")
+DST=tmp/debug
 
 
 print_usage(){
@@ -14,34 +14,36 @@ print_usage(){
 	echo "Informations about a binary will be stored to 'debug' directory."
 }
 
-cd $SCRIPT_BASEDIR
+cd "$SCRIPT_BASEDIR"
 if [ -f ./config.sh ]; then
 	. ./config.sh
-	./config.check.sh
+	./check_config.sh
 else
-	echo "ERROR: installation failed. Run 'make install'."
+	echo "ERROR: installation failed."
 	exit 1
 fi
+
+cd ..
 
 name=$1
 path=$2
 dst=$DST/$name
 
-if [ "$name" = "" ]; then
+if [[ "$name" = "" ]]; then
 	print_usage
 	exit 3
 fi
-if [ "$path" = "" ]; then
+if [[ "$path" = "" ]]; then
 	print_usage
 	exit 3
 fi
 
-if [[ -d $dst ]]; then
+if [[ -d "$dst" ]]; then
 	echo "dst '$dst' exists"
 	exit 1
 fi
 
-mkdir -p $dst
+mkdir -p "$dst"
 echo "name: $name ($dst)"
 echo "path: $path"
 echo
@@ -50,30 +52,30 @@ segment=__TEXT
 section=__text
 echo "create text '$section' section debug informations"
 txt=$dst/section-$segment-$section.txt
-$OTOOL -vVtjC $path > $txt
+$OTOOL -vVtjC "$path" > "$txt"
 
 echo "create text '$section' section plain"
-txt=$dst/section-$segment-$section-plain.txt
-$OTOOL -t $path | tail -n +3 | awk '{ print $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14 $15 $16 $17 }' | perl -e "while(<>){s/\n//g;print}" > $txt
+txt="$dst/section-$segment-$section-plain.txt"
+$OTOOL -t "$path" | tail -n +3 | awk '{ print $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14 $15 $16 $17 }' | perl -e "while(<>){s/\n//g;print}" > "$txt"
 
 for section in __stubs __stub_helper __cstring __ustring __objc_classname __objc_methname __objc_methtype __const __gcc_except_tab __unwind_info __eh_frame; do
 	echo "create text '$section' section debug informations"
 	txt=$dst/section-$segment-$section.txt
-	$OTOOL -vVjC -s $segment $section $path > $txt
+	$OTOOL -vVjC -s $segment $section "$path" > "$txt"
 done
 
 segment=__DATA
 for section in __program_vars __nl_symbol_ptr __got __la_symbol_ptr __mod_init_func __pointers __const __cfstring __objc_classlist __objc_nlclslist __objc_catlist __objc_protolist __objc_imageinfo __objc_const __objc_selrefs __objc_protorefs __objc_classrefs __objc_superrefs __objc_ivar __objc_data __data __bss __common; do
 	echo "create data '$section' section debug informations"
 	txt=$dst/section-$segment-$section.txt
-	$OTOOL -vVjC -s $segment $section $path > $txt
+	$OTOOL -vVjC -s $segment $section "$path" > "$txt"
 done
 
 
 echo "create name list debug informations"
 txt=$dst/name_list.txt
-$NM -na $path > $txt
+$NM -na "$path" > "$txt"
 
 echo "create load commands debug informations"
 txt=$dst/load_commands.txt
-$OTOOL -l $path > $txt
+$OTOOL -l "$path" > "$txt"
