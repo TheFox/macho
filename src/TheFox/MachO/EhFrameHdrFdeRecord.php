@@ -4,70 +4,128 @@ namespace TheFox\MachO;
 
 class EhFrameHdrFdeRecord extends EhFrameHdrRecord
 {
-    // @todo phpdocblocks
+    /**
+     * @var int
+     */
     private $pcBegin;
+
+    /**
+     * @var int
+     */
     private $pcRange;
+
+    /**
+     * @var int
+     */
     private $augmentationLength;
+
+    /**
+     * @var string
+     */
     private $augmentationData;
+
+    /**
+     * @var string
+     */
     private $callFrameInstructions;
+
+    /**
+     * @var string
+     */
     private $padding;
 
-    public function setPcBegin($pcBegin)
+    /**
+     * @param int $pcBegin
+     */
+    public function setPcBegin(int $pcBegin)
     {
         $this->pcBegin = $pcBegin;
     }
 
-    public function getPcBegin()
+    /**
+     * @return int
+     */
+    public function getPcBegin(): int
     {
         return $this->pcBegin;
     }
 
-    public function setPcRange($pcRange)
+    /**
+     * @param int $pcRange
+     */
+    public function setPcRange(int $pcRange)
     {
         $this->pcRange = $pcRange;
     }
 
-    public function getPcRange()
+    /**
+     * @return int
+     */
+    public function getPcRange(): int
     {
         return $this->pcRange;
     }
 
-    public function setAugmentationLength($augmentationLength)
+    /**
+     * @param int $augmentationLength
+     */
+    public function setAugmentationLength(int $augmentationLength)
     {
         $this->augmentationLength = $augmentationLength;
     }
 
-    public function getAugmentationLength()
+    /**
+     * @return int
+     */
+    public function getAugmentationLength(): int
     {
         return $this->augmentationLength;
     }
 
-    public function setAugmentationData($augmentationData)
+    /**
+     * @param string $augmentationData
+     */
+    public function setAugmentationData(string $augmentationData)
     {
         $this->augmentationData = $augmentationData;
     }
 
-    public function getAugmentationData()
+    /**
+     * @return string
+     */
+    public function getAugmentationData(): string
     {
         return $this->augmentationData;
     }
 
-    public function setCallFrameInstructions($callFrameInstructions)
+    /**
+     * @param string $callFrameInstructions
+     */
+    public function setCallFrameInstructions(string $callFrameInstructions)
     {
         $this->callFrameInstructions = $callFrameInstructions;
     }
 
-    public function getCallFrameInstructions()
+    /**
+     * @return string
+     */
+    public function getCallFrameInstructions(): string
     {
         return $this->callFrameInstructions;
     }
 
-    public function setPadding($padding)
+    /**
+     * @param string $padding
+     */
+    public function setPadding(string $padding)
     {
         $this->padding = $padding;
     }
 
-    public function getPadding()
+    /**
+     * @return string
+     */
+    public function getPadding(): string
     {
         return $this->padding;
     }

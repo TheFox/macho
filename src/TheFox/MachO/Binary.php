@@ -3,106 +3,210 @@
 namespace TheFox\MachO;
 
 use RuntimeException;
-use TheFox\Utilities\Bin;
 
 class Binary
 {
+    /**
+     * @var string
+     */
     private $path;
+
+    /**
+     * @var int
+     */
     private $magic;
+
+    /**
+     * @var int
+     */
     private $cpuType;
+
+    /**
+     * @var int
+     */
     private $cpuSubtype;
+
+    /**
+     * @var int
+     */
     private $fileType;
+
+    /**
+     * @var
+     */
     private $nCmds;
+
+    /**
+     * @var
+     */
     private $sizeOfCmds;
+
+    /**
+     * @var
+     */
     private $flags;
 
-    private $loadCommands = array();
+    /**
+     * @var LoadCommandSegment[]|LoadCommandEntryPoint[]
+     */
+    private $loadCommands = [];
 
-    private $expectedFileSize = null;
-    private $expectedMd5sum = null;
+    /**
+     * @var int
+     */
+    private $expectedFileSize;
+
+    /**
+     * @var string
+     */
+    private $expectedMd5sum;
+
+    /**
+     * @var int
+     */
     private $mainEntryOffset = 0;
-    private $mainVmAddress = 0;
-    private $ehFrame = null;
 
-    public function __construct($path)
+    /**
+     * @var int
+     */
+    private $mainVmAddress = 0;
+
+    /**
+     * @var EhFrame
+     */
+    private $ehFrame;
+
+    /**
+     * Binary constructor.
+     *
+     * @param string $path
+     */
+    public function __construct(string $path)
     {
         $this->path = $path;
     }
 
-    public function getPath()
+    /**
+     * @return string
+     */
+    public function getPath(): string
     {
         return $this->path;
     }
 
-    public function getMagic()
+    /**
+     * @return int
+     */
+    public function getMagic(): int
     {
         return $this->magic;
     }
 
-    public function getCpuType()
+    /**
+     * @return int
+     */
+    public function getCpuType(): int
     {
         return $this->cpuType;
     }
 
-    public function getCpuSubtype()
+    /**
+     * @return int
+     */
+    public function getCpuSubtype(): int
     {
         return $this->cpuSubtype;
     }
 
-    public function getFileType()
+    /**
+     * @return int
+     */
+    public function getFileType(): int
     {
         return $this->fileType;
     }
 
-    public function getNcmds()
+    /**
+     * @return int
+     */
+    public function getNcmds(): int
     {
         return $this->nCmds;
     }
 
-    public function getSizeOfCmds()
+    /**
+     * @return int
+     */
+    public function getSizeOfCmds(): int
     {
         return $this->sizeOfCmds;
     }
 
-    public function getFlags()
+    /**
+     * @return int
+     */
+    public function getFlags(): int
     {
         return $this->flags;
     }
 
-    public function setExpectedFileSize($expectedFileSize)
+    /**
+     * @param int $expectedFileSize
+     */
+    public function setExpectedFileSize(int $expectedFileSize)
     {
         $this->expectedFileSize = $expectedFileSize;
     }
 
-    public function getExpectedFileSize()
+    /**
+     * @return int
+     */
+    public function getExpectedFileSize(): int
     {
         return $this->expectedFileSize;
     }
 
-    public function setExpectedMd5sum($expectedMd5sum)
+    /**
+     * @param string $expectedMd5sum
+     */
+    public function setExpectedMd5sum(string $expectedMd5sum)
     {
         $this->expectedMd5sum = $expectedMd5sum;
     }
 
-    public function getExpectedMd5sum()
+    /**
+     * @return string
+     */
+    public function getExpectedMd5sum(): string
     {
         return $this->expectedMd5sum;
     }
 
+    /**
+     * @return array
+     */
     public function getLoadCommands()
     {
         return $this->loadCommands;
     }
 
-    public function getMainVmAddress()
+    /**
+     * @return int
+     */
+    public function getMainVmAddress(): int
     {
         return $this->mainVmAddress;
     }
 
+    /**
+     * @return EhFrame|null
+     */
     public function getEhFrame()
     {
         if (!$this->ehFrame) {
-            $this->parseEhFrame();
+            if (!$this->parseEhFrame()) {
+                return null;
+            }
         }
         return $this->ehFrame;
     }
@@ -135,137 +239,159 @@ class Binary
         }
     }
 
-    private function parseHeader()
+    /**
+     * @return bool
+     */
+    private function parseHeader(): bool
     {
         $fh = fopen($this->path, 'r');
-        if ($fh) {
-
-            $data = fread($fh, 4); // magic
-            $data = unpack('H*', strrev($data));
-            $this->magic = hexdec($data[1]);
-
-            if ($this->magic == \TheFox\MachO\MH_MAGIC
-                || $this->magic == \TheFox\MachO\MH_MAGIC_64
-            ) {
-
-                $data = fread($fh, 4); // cputype
-                $data = unpack('H*', strrev($data));
-                $this->cpuType = hexdec($data[1]);
-
-                $data = fread($fh, 4); // cpusubtype
-                $data = unpack('H*', strrev($data));
-                #$this->cpuSubtype = hexdec($data[1]) & ~\TheFox\MachO\CPU_SUBTYPE_LIB64;
-                $this->cpuSubtype = hexdec($data[1]);
-                #print "sub: 0x".dechex($this->cpuSubtype)."\n";
-
-                $data = fread($fh, 4); // filetype
-                $data = unpack('H*', strrev($data));
-                $this->fileType = hexdec($data[1]);
-
-                $data = fread($fh, 4); // ncmds
-                $data = unpack('H*', strrev($data));
-                $this->nCmds = hexdec($data[1]);
-
-                $data = fread($fh, 4); // sizeofcmds
-                $data = unpack('H*', strrev($data));
-                $this->sizeOfCmds = hexdec($data[1]);
-
-                $data = fread($fh, 4); // flags
-                $data = unpack('H*', strrev($data));
-                $this->flags = hexdec($data[1]);
-
-                if ($this->cpuType & \TheFox\MachO\CPU_ARCH_ABI64) {
-                    // reserved
-                    $data = fread($fh, 4);
-                }
-
-                for ($cmdN = 0; $cmdN < $this->nCmds; $cmdN++) {
-                    $cmdsData = fread($fh, 4); // cmd
-                    $cmd = unpack('H*', strrev($cmdsData));
-                    $cmd = hexdec($cmd[1]);
-
-                    $cmdsData = fread($fh, 4); // cmdsize
-                    $cmdsize = unpack('H*', strrev($cmdsData));
-                    $cmdsize = hexdec($cmdsize[1]);
-
-                    #print 'cmd '.$cmdN.': 0x'.dechex($cmd).' 0x'.dechex($cmdsize)."\n";
-
-                    $cmdsData = fread($fh, $cmdsize - 8);
-                    $lcmd = LoadCommand::fromBinaryWithoutHead($this, $cmd, $cmdsize, $cmdsData);
-                    if ($lcmd) {
-                        $this->loadCommands[(string)$lcmd] = $lcmd;
-                    }
-                }
-
-                if (isset($this->loadCommands['LC_MAIN'])) {
-                    $this->mainEntryOffset = $this->loadCommands['LC_MAIN']->getEntryOff();
-
-                    if (isset($this->loadCommands['__TEXT'])) {
-                        #\Doctrine\Common\Util\Debug::dump($this->loadCommands['__TEXT'], 3);
-                        $this->mainVmAddress = $this->loadCommands['__TEXT']->getVmAddr();
-                        $this->mainVmAddress += $this->mainEntryOffset;
-                    }
-                }
-            } else {
-                throw new RuntimeException('Unknown file type.', 30);
-            }
-
-            fclose($fh);
+        if (!$fh) {
+            return false;
         }
+
+        $data = fread($fh, 4); // magic
+        $data = unpack('H*', strrev($data));
+        $this->magic = hexdec($data[1]);
+
+        $mhMagic = MachO::MH_MAGIC;
+        $mhMagic64 = MachO::MH_MAGIC_64;
+
+        if ($this->magic != $mhMagic && $this->magic != $mhMagic64) {
+            throw new RuntimeException('Unknown file type.', 30);
+        }
+
+        $data = fread($fh, 4); // cputype
+        $data = unpack('H*', strrev($data));
+        $this->cpuType = hexdec($data[1]);
+
+        $data = fread($fh, 4); // cpusubtype
+        $data = unpack('H*', strrev($data));
+        //$this->cpuSubtype = hexdec($data[1]) & ~MachO::CPU_SUBTYPE_LIB64;
+        $this->cpuSubtype = hexdec($data[1]);
+        #print "sub: 0x".dechex($this->cpuSubtype)."\n";
+
+        $data = fread($fh, 4); // filetype
+        $data = unpack('H*', strrev($data));
+        $this->fileType = hexdec($data[1]);
+
+        $data = fread($fh, 4); // ncmds
+        $data = unpack('H*', strrev($data));
+        $this->nCmds = hexdec($data[1]);
+
+        $data = fread($fh, 4); // sizeofcmds
+        $data = unpack('H*', strrev($data));
+        $this->sizeOfCmds = hexdec($data[1]);
+
+        $data = fread($fh, 4); // flags
+        $data = unpack('H*', strrev($data));
+        $this->flags = hexdec($data[1]);
+
+        if ($this->cpuType & MachO::CPU_ARCH_ABI64) {
+            // reserved
+            $data = fread($fh, 4);
+        }
+
+        for ($cmdN = 0; $cmdN < $this->nCmds; $cmdN++) {
+            $cmdsData = fread($fh, 4); // cmd
+            $cmd = unpack('H*', strrev($cmdsData));
+            $cmd = hexdec($cmd[1]);
+
+            $cmdsData = fread($fh, 4); // cmdsize
+            $cmdsize = unpack('H*', strrev($cmdsData));
+            $cmdsize = hexdec($cmdsize[1]);
+
+            #print 'cmd '.$cmdN.': 0x'.dechex($cmd).' 0x'.dechex($cmdsize)."\n";
+
+            $cmdsData = fread($fh, $cmdsize - 8);
+            $lcmd = LoadCommand::fromBinaryWithoutHead($this, $cmd, $cmdsize, $cmdsData);
+            if ($lcmd) {
+                $this->loadCommands[(string)$lcmd] = $lcmd;
+            }
+        }
+
+        if (isset($this->loadCommands['LC_MAIN'])) {
+            $lcMainCmd = $this->loadCommands['LC_MAIN'];
+            $this->mainEntryOffset = $lcMainCmd->getEntryOff();
+
+            if (isset($this->loadCommands['__TEXT'])) {
+                $textCmd = $this->loadCommands['__TEXT'];
+                $this->mainVmAddress = $textCmd->getVmAddr();
+                $this->mainVmAddress += $this->mainEntryOffset;
+            }
+        }
+
+        fclose($fh);
+
+        return true;
     }
 
-    public function write($segmentName, $sectionName, $offset, $data)
+    /**
+     * @param string $segmentName
+     * @param string $sectionName
+     * @param int $offset
+     * @param string $data
+     * @return bool|int|null
+     */
+    public function write(string $segmentName, string $sectionName, int $offset, string $data)
     {
-        $rv = null;
-
         $mode = 'r+';
         $fh = fopen($this->path, $mode);
-        if ($fh) {
-            if (isset($this->loadCommands[$segmentName])) {
-                $pos = 0;
-
-                $lcmd = $this->loadCommands[$segmentName];
-                if ($lcmd instanceof LoadCommandSegment) {
-                    $section = $lcmd->getSectionByName($sectionName);
-                    $pos = $section->getOffset() + $offset;
-                }
-
-                if ($pos) {
-                    rewind($fh);
-                    fseek($fh, $pos);
-                    $rv = fwrite($fh, $data);
-                }
-            }
-            #else{ print "seg '$segmentName' not found\n"; }
-            fclose($fh);
+        if (!$fh) {
+            return null;
         }
+
+        $rv = null;
+        if (isset($this->loadCommands[$segmentName])) {
+            $pos = 0;
+
+            $lcmd = $this->loadCommands[$segmentName];
+            if ($lcmd instanceof LoadCommandSegment) {
+                $section = $lcmd->getSectionByName($sectionName);
+                $pos = $section->getOffset() + $offset;
+            }
+
+            if ($pos) {
+                rewind($fh);
+                fseek($fh, $pos);
+                $rv = fwrite($fh, $data);
+            }
+        }
+        #else{ print "seg '$segmentName' not found\n"; }
+        fclose($fh);
 
         return $rv;
     }
 
-    private function parseEhFrame()
+    /**
+     * @return bool
+     */
+    private function parseEhFrame(): bool
     {
-        if (isset($this->loadCommands['__TEXT'])) {
-            $lcmd = $this->loadCommands['__TEXT'];
-            #\Doctrine\Common\Util\Debug::dump($lcmd);
-
-            $section = $lcmd->getSectionByName('__eh_frame');
-
-            #\Doctrine\Common\Util\Debug::dump($section, 1);
-
-            $fh = fopen($this->path, 'r');
-            if ($fh) {
-                $pos = $section->getOffset();
-                rewind($fh);
-                fseek($fh, $pos);
-                $data = fread($fh, $section->getSize());
-
-                #$data = unpack('H*', $data);
-                #\Doctrine\Common\Util\Debug::dump($data);
-                fclose($fh);
-
-                $this->ehFrame = EhFrame::fromBinaryWithoutHead($this, $data);
-            }
+        if (!isset($this->loadCommands['__TEXT'])) {
+            return false;
         }
+
+        $lcmd = $this->loadCommands['__TEXT'];
+
+        $section = $lcmd->getSectionByName('__eh_frame');
+        if (!$section) {
+            return false;
+        }
+
+        $fh = fopen($this->path, 'r');
+        if (!$fh) {
+            return false;
+        }
+
+        $pos = $section->getOffset();
+        rewind($fh);
+        fseek($fh, $pos);
+        $data = fread($fh, $section->getSize());
+
+        fclose($fh);
+
+        $this->ehFrame = EhFrame::fromBinaryWithoutHead($this, $data);
+
+        return true;
     }
 }

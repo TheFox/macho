@@ -64,7 +64,7 @@ class LoadSectionTest extends PHPUnit_Framework_TestCase
     public function testSetLoadCommand()
     {
         $loadCommand = new LoadCommand();
-        
+
         $sect = new LoadSection();
         $sect->setLoadCommand($loadCommand);
         $this->assertEquals($loadCommand, $sect->getLoadCommand());

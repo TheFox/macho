@@ -2,12 +2,10 @@
 
 namespace TheFox\MachO;
 
-use TheFox\Utilities\Bin;
-
 class LoadCommand
 {
     /**
-     * @var string
+     * @var int
      */
     private $cmd;
 
@@ -21,26 +19,41 @@ class LoadCommand
      */
     private $binary;
 
-    public function setCmd(string $cmd)
+    /**
+     * @param int $cmd
+     */
+    public function setCmd(int $cmd)
     {
         $this->cmd = $cmd;
     }
 
-    public function getCmd()
+    /**
+     * @return int
+     */
+    public function getCmd(): int
     {
         return $this->cmd;
     }
 
+    /**
+     * @param int $length
+     */
     public function setLength(int $length)
     {
         $this->length = $length;
     }
 
+    /**
+     * @return int
+     */
     public function getLength(): int
     {
         return $this->length;
     }
 
+    /**
+     * @param Binary $binary
+     */
     public function setBinary(Binary $binary)
     {
         $this->binary = $binary;
@@ -56,22 +69,22 @@ class LoadCommand
 
     /**
      * @param Binary $binary
-     * @param string $cmd
+     * @param int $cmd
      * @param int $length
      * @param string $bin
-     * @return null|LoadCommandEntryPoint|LoadCommandSegment
+     * @return null|LoadCommandSegment|LoadCommandEntryPoint
      */
-    public static function fromBinaryWithoutHead(Binary $binary, string $cmd, int $length, string $bin)
+    public static function fromBinaryWithoutHead(Binary $binary, int $cmd, int $length, string $bin)
     {
         $lcmd = null;
 
         $archLen = 4;
-        if ($binary->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64) {
+        if ($binary->getCpuType() & MachO::CPU_ARCH_ABI64) {
             #print '  -> ABI64'."\n";
             $archLen = 8;
         }
 
-        if ($cmd == \TheFox\MachO\LC_SEGMENT || $cmd == \TheFox\MachO\LC_SEGMENT_64) {
+        if ($cmd == MachO::LC_SEGMENT || $cmd == MachO::LC_SEGMENT_64) {
             #print '  -> LC_SEGMENT'."\n";
 
             $lcmd = new LoadCommandSegment();
@@ -183,7 +196,7 @@ class LoadCommand
                 $data = substr($bin, 0, 4); // reserved2
                 $bin = substr($bin, 4);
 
-                if ($lcmd->getBinary()->getCpuType() & \TheFox\MachO\CPU_ARCH_ABI64) {
+                if ($lcmd->getBinary()->getCpuType() & MachO::CPU_ARCH_ABI64) {
                     $data = substr($bin, 0, 4); // reserved3
                     $bin = substr($bin, 4);
                 }
@@ -193,7 +206,7 @@ class LoadCommand
             }
 
             #$lcmd->setSections($sections);
-        } elseif ($cmd == \TheFox\MachO\LC_MAIN) {
+        } elseif ($cmd == MachO::LC_MAIN) {
             $lcmd = new LoadCommandEntryPoint();
             $lcmd->setBinary($binary);
             $lcmd->setCmd($cmd);

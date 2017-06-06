@@ -2,7 +2,7 @@
 
 namespace TheFox\Console\Command;
 
-use RuntimeException;
+//use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,12 +10,18 @@ use TheFox\MachO\MachO;
 
 class InfoCommand extends BasicCommand
 {
-    public function getLogfilePath()
+    /**
+     * @return string
+     */
+    public function getLogfilePath(): string
     {
         return 'log/info.log';
     }
 
-    public function getPidfilePath()
+    /**
+     * @return string
+     */
+    public function getPidfilePath(): string
     {
         return 'pid/info.pid';
     }
@@ -29,6 +35,10 @@ class InfoCommand extends BasicCommand
         $this->addOption('version_number', null, InputOption::VALUE_NONE, 'Prints the version of this application.');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         #$this->executePre($input, $output);
@@ -44,35 +54,38 @@ class InfoCommand extends BasicCommand
         #$this->executePost();
     }
 
-    public function signalHandler($signal)
+    /**
+     * @param int $signal
+     */
+    public function signalHandler(int $signal)
     {
         $this->exit++;
 
         switch ($signal) {
             case SIGTERM:
-                $this->log->notice('signal: SIGTERM');
+                $this->logger->notice('signal: SIGTERM');
                 break;
             case SIGINT:
                 print PHP_EOL;
-                $this->log->notice('signal: SIGINT');
+                $this->logger->notice('signal: SIGINT');
                 break;
             case SIGHUP:
-                $this->log->notice('signal: SIGHUP');
+                $this->logger->notice('signal: SIGHUP');
                 break;
             case SIGQUIT:
-                $this->log->notice('signal: SIGQUIT');
+                $this->logger->notice('signal: SIGQUIT');
                 break;
             case SIGKILL:
-                $this->log->notice('signal: SIGKILL');
+                $this->logger->notice('signal: SIGKILL');
                 break;
             case SIGUSR1:
-                $this->log->notice('signal: SIGUSR1');
+                $this->logger->notice('signal: SIGUSR1');
                 break;
             default:
-                $this->log->notice('signal: N/A');
+                $this->logger->notice('signal: N/A');
         }
 
-        $this->log->notice('main abort [' . $this->exit . ']');
+        $this->logger->notice('main abort [' . $this->exit . ']');
 
         if ($this->exit >= 2) {
             exit(1);

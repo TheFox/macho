@@ -22,21 +22,33 @@ class LoadCommandEntryPoint extends LoadCommand
         return 'LC_MAIN';
     }
 
+    /**
+     * @param int $entryoff
+     */
     public function setEntryOff(int $entryoff)
     {
         $this->entryoff = $entryoff;
     }
 
+    /**
+     * @return int
+     */
     public function getEntryOff(): int
     {
         return $this->entryoff;
     }
 
+    /**
+     * @param int $stacksize
+     */
     public function setStackSize(int $stacksize)
     {
         $this->stacksize = $stacksize;
     }
 
+    /**
+     * @return int
+     */
     public function getStackSize(): int
     {
         return $this->stacksize;

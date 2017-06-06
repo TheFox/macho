@@ -14,41 +14,67 @@ use TheFox\Logger\StreamHandler;
 
 class BasicCommand extends Command
 {
-    public $log;
-    public $exit = 0;
-    private $pidFile;
-    //private $settings;
+    /**
+     * @var Logger
+     */
+    public $logger;
 
-    public function setExit($exit)
+    /**
+     * @var int
+     */
+    public $exit = 0;
+
+    /**
+     * @var string
+     */
+    private $pidFile;
+
+    /**
+     * @param int $exit
+     */
+    public function setExit(int $exit)
     {
         $this->exit = $exit;
     }
 
-    public function getExit()
+    /**
+     * @return int
+     */
+    public function getExit(): int
     {
         return $this->exit;
     }
 
-    public function getLogfilePath()
+    /**
+     * @return string
+     */
+    public function getLogfilePath(): string
     {
         return 'log/application.log';
     }
 
-    public function getPidfilePath()
+    /**
+     * @return string
+     */
+    public function getPidfilePath(): string
     {
         return 'pid/application.pid';
     }
 
+    /**
+     * @deprecated
+     * @param InputInterface $input
+     */
     public function executePre(InputInterface $input)
     {
-        $this->log = new Logger($this->getName());
-        $this->log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
-        $this->log->pushHandler(new StreamHandler($this->getLogfilePath(), Logger::DEBUG));
+        $this->logger = new Logger($this->getName());
+        $this->logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+        $this->logger->pushHandler(new StreamHandler($this->getLogfilePath(), Logger::DEBUG));
 
         if ($input->hasOption('shutdown') && $input->getOption('shutdown')) {
             if (file_exists($this->getPidfilePath())) {
                 $pid = file_get_contents($this->getPidfilePath());
-                $this->log->info('kill ' . $pid);
+                $this->logger->info('kill ' . $pid);
                 posix_kill($pid, SIGTERM);
             }
             exit();
@@ -80,6 +106,9 @@ class BasicCommand extends Command
         $this->pidFile->setPid(getmypid());
     }
 
+    /**
+     * @deprecated
+     */
     public function executePost()
     {
         $this->pidFile->releaseLock();
@@ -89,41 +118,44 @@ class BasicCommand extends Command
     {
         if (function_exists('pcntl_signal')) {
             declare(ticks=1);
-            pcntl_signal(SIGTERM, array($this, 'signalHandler'));
-            pcntl_signal(SIGINT, array($this, 'signalHandler'));
-            pcntl_signal(SIGHUP, array($this, 'signalHandler'));
+            pcntl_signal(SIGTERM, [$this, 'signalHandler']);
+            pcntl_signal(SIGINT, [$this, 'signalHandler']);
+            pcntl_signal(SIGHUP, [$this, 'signalHandler']);
         }
     }
 
-    public function signalHandler($signal)
+    /**
+     * @param int $signal
+     */
+    public function signalHandler(int $signal)
     {
         $this->exit++;
 
         switch ($signal) {
             case SIGTERM:
-                $this->log->notice('signal: SIGTERM');
+                $this->logger->notice('signal: SIGTERM');
                 break;
             case SIGINT:
                 print PHP_EOL;
-                $this->log->notice('signal: SIGINT');
+                $this->logger->notice('signal: SIGINT');
                 break;
             case SIGHUP:
-                $this->log->notice('signal: SIGHUP');
+                $this->logger->notice('signal: SIGHUP');
                 break;
             case SIGQUIT:
-                $this->log->notice('signal: SIGQUIT');
+                $this->logger->notice('signal: SIGQUIT');
                 break;
             case SIGKILL:
-                $this->log->notice('signal: SIGKILL');
+                $this->logger->notice('signal: SIGKILL');
                 break;
             case SIGUSR1:
-                $this->log->notice('signal: SIGUSR1');
+                $this->logger->notice('signal: SIGUSR1');
                 break;
             default:
-                $this->log->notice('signal: N/A');
+                $this->logger->notice('signal: N/A');
         }
 
-        $this->log->notice('main abort [' . $this->exit . ']');
+        $this->logger->notice('main abort [' . $this->exit . ']');
 
         if ($this->exit >= 2) {
             exit(1);

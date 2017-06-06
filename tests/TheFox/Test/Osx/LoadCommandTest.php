@@ -11,8 +11,8 @@ class LoadCommandTest extends PHPUnit_Framework_TestCase
     public function testSetCmd()
     {
         $cmd = new LoadCommand();
-        $cmd->setCmd('xyz');
-        $this->assertEquals('xyz', $cmd->getCmd());
+        $cmd->setCmd(123);
+        $this->assertEquals(123, $cmd->getCmd());
     }
 
     public function testSetLength()

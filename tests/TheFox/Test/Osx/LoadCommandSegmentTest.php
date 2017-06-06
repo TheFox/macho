@@ -25,36 +25,36 @@ class LoadCommandSegmentTest extends PHPUnit_Framework_TestCase
     public function testSetVmAddr()
     {
         $seg = new LoadCommandSegment();
-        $seg->setVmAddr('xyz');
-        $this->assertEquals('xyz', $seg->getVmAddr());
+        $seg->setVmAddr(123);
+        $this->assertEquals(123, $seg->getVmAddr());
     }
 
     public function testSetVmSize()
     {
         $seg = new LoadCommandSegment();
-        $seg->setVmSize('xyz');
-        $this->assertEquals('xyz', $seg->getVmSize());
+        $seg->setVmSize(123);
+        $this->assertEquals(123, $seg->getVmSize());
     }
 
     public function testSetFileOff()
     {
         $seg = new LoadCommandSegment();
-        $seg->setFileOff('xyz');
-        $this->assertEquals('xyz', $seg->getFileOff());
+        $seg->setFileOff(123);
+        $this->assertEquals(123, $seg->getFileOff());
     }
 
     public function testSetNsects()
     {
         $seg = new LoadCommandSegment();
-        $seg->setNsects('xyz');
-        $this->assertEquals('xyz', $seg->getNsects());
+        $seg->setNsects(123);
+        $this->assertEquals(123, $seg->getNsects());
     }
 
     public function testSetSections()
     {
         $seg = new LoadCommandSegment();
-        $seg->setSections(array(1, 2, 3));
-        $this->assertEquals(array(1, 2, 3), $seg->getSections());
+        $seg->setSections([1, 2, 3]);
+        $this->assertEquals([1, 2, 3], $seg->getSections());
     }
 
     public function testGetSectionByName()

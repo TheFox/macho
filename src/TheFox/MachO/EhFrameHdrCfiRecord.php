@@ -4,26 +4,44 @@ namespace TheFox\MachO;
 
 class EhFrameHdrCfiRecord
 {
-    // @todo phpdocblocks
+    /**
+     * @var EhFrameHdrCieRecord
+     */
     private $cie;
+
+    /**
+     * @var EhFrameHdrFdeRecord
+     */
     private $fde;
 
-    public function setCie($cie)
+    /**
+     * @param EhFrameHdrCieRecord $cie
+     */
+    public function setCie(EhFrameHdrCieRecord $cie)
     {
         $this->cie = $cie;
     }
 
-    public function getCie()
+    /**
+     * @return EhFrameHdrCieRecord
+     */
+    public function getCie(): EhFrameHdrCieRecord
     {
         return $this->cie;
     }
 
-    public function setFde($fde)
+    /**
+     * @param EhFrameHdrFdeRecord $fde
+     */
+    public function setFde(EhFrameHdrFdeRecord $fde)
     {
         $this->fde = $fde;
     }
 
-    public function getFde()
+    /**
+     * @return EhFrameHdrFdeRecord
+     */
+    public function getFde(): EhFrameHdrFdeRecord
     {
         return $this->fde;
     }

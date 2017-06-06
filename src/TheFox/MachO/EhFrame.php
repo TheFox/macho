@@ -9,7 +9,7 @@ use TheFox\Utilities\Leb128;
 class EhFrame
 {
     /**
-     * @var array
+     * @var EhFrameHdrCfiRecord[]
      */
     private $records = [];
 
@@ -18,8 +18,10 @@ class EhFrame
      */
     private $binary;
 
-    // @todo phpdocblocks
-    public function addRecord($record)
+    /**
+     * @param EhFrameHdrCfiRecord $record
+     */
+    public function addRecord(EhFrameHdrCfiRecord $record)
     {
         $this->records[] = $record;
     }
@@ -50,8 +52,6 @@ class EhFrame
         $ehframe = new Ehframe();
         $ehframe->setBinary($binary);
 
-        #\Doctrine\Common\Util\Debug::dump($binary);
-
         while ($bin) {
             $pos = 0;
 
@@ -61,7 +61,6 @@ class EhFrame
             $val = hexdec($val[1]);
             $length = $val;
             $pos += 4;
-            #\Doctrine\Common\Util\Debug::dump($val);
 
             $extLength = 0;
             if ($length == 0xffffffff) {
@@ -71,7 +70,6 @@ class EhFrame
                 $val = hexdec($val[1]);
                 $extLength = $val;
                 $pos += 8;
-                #\Doctrine\Common\Util\Debug::dump($val);
             }
 
             $data = substr($bin, 0, 4); // CIE ID
@@ -80,7 +78,6 @@ class EhFrame
             $val = hexdec($val[1]);
             $cieId = $val;
             $pos += 4;
-            #\Doctrine\Common\Util\Debug::dump($val);
 
             $data = substr($bin, 0, 1); // Version
             $bin = substr($bin, 1);
@@ -88,7 +85,6 @@ class EhFrame
             $val = hexdec($val[1]);
             $version = $val;
             $pos++;
-            #\Doctrine\Common\Util\Debug::dump($val);
 
             // Augmentation String
             $augmentationString = '';
@@ -101,14 +97,12 @@ class EhFrame
                     $augmentationString .= $data;
                 }
                 $pos++;
-                #print "as: '$data' ".ord($data)."\n";
-                #sleep(1);
             } while ($c);
 
             // EH Data
             $ehData = '';
             if ($augmentationString == 'eh') {
-                if ($binary->getCpuType() | \TheFox\MachO\CPU_ARCH_ABI64) {
+                if ($binary->getCpuType() | MachO::CPU_ARCH_ABI64) {
                     $data = substr($bin, 0, 8);
                     $bin = substr($bin, 8);
                     $pos += 8;
@@ -120,7 +114,6 @@ class EhFrame
                 $val = unpack('H*', strrev($data));
                 $val = hexdec($val[1]);
                 $ehData = $val;
-                #\Doctrine\Common\Util\Debug::dump($val);
             }
 
             // Code Alignment Factor
@@ -170,13 +163,9 @@ class EhFrame
             $val = hexdec($val[1]);
             $initialInstructions = $val;
             $pos += 12;
-
-            \Doctrine\Common\Util\Debug::dump($bin);
-            \Doctrine\Common\Util\Debug::dump(unpack('H*', $bin));
-
+            
             $padding = '';
-
-
+            
             $cieRecord = new EhFrameHdrCieRecord();
             $cieRecord->setLength($length);
             $cieRecord->setExtLength($extLength);
@@ -200,7 +189,6 @@ class EhFrame
             $val = hexdec($val[1]);
             $length = $val;
             $pos += 4;
-            #\Doctrine\Common\Util\Debug::dump($val);
 
             $extLength = 0;
             if ($length == 0xffffffff) {
@@ -210,7 +198,6 @@ class EhFrame
                 $val = hexdec($val[1]);
                 $extLength = $val;
                 $pos += 8;
-                #\Doctrine\Common\Util\Debug::dump($val);
             }
 
             $data = substr($bin, 0, 4); // CIE ID
@@ -219,7 +206,6 @@ class EhFrame
             $val = hexdec($val[1]);
             $cieId = $val;
             $pos += 4;
-            #\Doctrine\Common\Util\Debug::dump($val);
 
             $data = substr($bin, 0, 8); // PC Begin
             $bin = substr($bin, 8);
@@ -237,7 +223,7 @@ class EhFrame
 
             // Augmentation
             $augmentationLength = 0;
-            $augmentationData = '';
+            //$augmentationData = '';
             if (strpos($augmentationString, 'z') !== false) {
                 print 'Augmentation Data' . "\n";
 
@@ -292,13 +278,12 @@ class EhFrame
             $cfiRecord = new EhFrameHdrCfiRecord();
             $cfiRecord->setCie($cieRecord);
             $cfiRecord->setFde($fdeRecord);
-            \Doctrine\Common\Util\Debug::dump($cfiRecord, 1);
 
             $ehframe->addRecord($cfiRecord);
+            
             break;
         }
-
-
+        
         return $ehframe;
     }
 }

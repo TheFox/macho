@@ -2,19 +2,39 @@
 
 namespace TheFox\MachO;
 
+use RuntimeException;
+
 class LoadCommandSegment extends LoadCommand
 {
     /**
      * @var string
      */
     private $name;
+
+    /**
+     * @var int
+     */
     private $vmaddr;
+
+    /**
+     * @var int
+     */
     private $vmsize;
+
+    /**
+     * @var int
+     */
     private $fileoff;
+
     #private $filesize;
     #private $maxprot;
     #private $initprot;
+
+    /**
+     * @var int
+     */
     private $nsects;
+
     #private $flags;
 
     /**
@@ -30,74 +50,121 @@ class LoadCommandSegment extends LoadCommand
         return $this->getName();
     }
 
+    /**
+     * @param string $name
+     */
     public function setName(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setVmAddr($vmaddr)
+    /**
+     * @param int $vmaddr
+     */
+    public function setVmAddr(int $vmaddr)
     {
         $this->vmaddr = $vmaddr;
     }
 
-    public function getVmAddr()
+    /**
+     * @return int
+     */
+    public function getVmAddr(): int
     {
         return $this->vmaddr;
     }
 
-    public function setVmSize($vmsize)
+    /**
+     * @param int $vmsize
+     */
+    public function setVmSize(int $vmsize)
     {
         $this->vmsize = $vmsize;
     }
 
-    public function getVmSize()
+    /**
+     * @return int
+     */
+    public function getVmSize(): int
     {
         return $this->vmsize;
     }
 
-    public function setFileOff($fileoff)
+    /**
+     * @param int $fileoff
+     */
+    public function setFileOff(int $fileoff)
     {
         $this->fileoff = $fileoff;
     }
 
-    public function getFileOff()
+    /**
+     * @return int
+     */
+    public function getFileOff(): int
     {
         return $this->fileoff;
     }
 
-    public function setNsects($nsects)
+    /**
+     * @param int $nsects
+     */
+    public function setNsects(int $nsects)
     {
         $this->nsects = $nsects;
     }
 
-    public function getNsects()
+    /**
+     * @return int
+     */
+    public function getNsects(): int
     {
         return $this->nsects;
     }
 
+    /**
+     * @param array $sections
+     */
     public function setSections(array $sections)
     {
         $this->sections = $sections;
     }
 
+    /**
+     * @param LoadSection $section
+     */
     public function addSection(LoadSection $section)
     {
-        $name = (string)$section;
+        $name = $section->getName();
         $this->sections[$name] = $section;
     }
 
+    /**
+     * @return LoadSection[]
+     */
     public function getSections(): array
     {
         return $this->sections;
     }
 
-    public function getSectionByName($name): LoadSection
+    /**
+     * @param string $name
+     * @return LoadSection|null
+     */
+    public function getSectionByName(string $name)
     {
+        if (!array_key_exists($name, $this->sections)) {
+            return null;
+            //throw new RuntimeException('Section "' . $name . '" does not exist');
+        }
         return $this->sections[$name];
     }
 }

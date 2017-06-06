@@ -4,103 +4,191 @@ namespace TheFox\MachO;
 
 class EhFrameHdrCieRecord extends EhFrameHdrRecord
 {
-    // @todo phpdocblocks
+    /**
+     * @var int
+     */
     private $version;
+
+    /**
+     * @var string
+     */
     private $augmentationString;
+
+    /**
+     * @var string
+     */
     private $ehData;
+
+    /**
+     * @var int
+     */
     private $codeAlignmentFactor;
+
+    /**
+     * @var int
+     */
     private $dataAlignmentFactor;
+
+    /**
+     * @var int
+     */
     private $augmentationLength;
+
+    /**
+     * @var string
+     */
     private $augmentationData;
+
+    /**
+     * @var int
+     */
     private $initialInstructions;
+
+    /**
+     * @var string
+     */
     private $padding;
 
-    public function setVersion($version)
+    /**
+     * @param int $version
+     */
+    public function setVersion(int $version)
     {
         $this->version = $version;
     }
 
-    public function getVersion()
+    /**
+     * @return int
+     */
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    public function setAugmentationString($augmentationString)
+    /**
+     * @param string $augmentationString
+     */
+    public function setAugmentationString(string $augmentationString)
     {
         $this->augmentationString = $augmentationString;
     }
 
-    public function getAugmentationString()
+    /**
+     * @return string
+     */
+    public function getAugmentationString(): string
     {
         return $this->augmentationString;
     }
 
-    public function setEhData($ehData)
+    /**
+     * @param string $ehData
+     */
+    public function setEhData(string $ehData)
     {
         $this->ehData = $ehData;
     }
 
-    public function getEhData()
+    /**
+     * @return string
+     */
+    public function getEhData(): string
     {
         return $this->ehData;
     }
 
-    public function setCodeAlignmentFactor($codeAlignmentFactor)
+    /**
+     * @param int $codeAlignmentFactor
+     */
+    public function setCodeAlignmentFactor(int $codeAlignmentFactor)
     {
         $this->codeAlignmentFactor = $codeAlignmentFactor;
     }
 
-    public function getCodeAlignmentFactor()
+    /**
+     * @return int
+     */
+    public function getCodeAlignmentFactor(): int
     {
         return $this->codeAlignmentFactor;
     }
 
-    public function setDataAlignmentFactor($dataAlignmentFactor)
+    /**
+     * @param int $dataAlignmentFactor
+     */
+    public function setDataAlignmentFactor(int $dataAlignmentFactor)
     {
         $this->dataAlignmentFactor = $dataAlignmentFactor;
     }
 
-    public function getDataAlignmentFactor()
+    /**
+     * @return int
+     */
+    public function getDataAlignmentFactor(): int
     {
         return $this->dataAlignmentFactor;
     }
 
-    public function setAugmentationLength($augmentationLength)
+    /**
+     * @param int $augmentationLength
+     */
+    public function setAugmentationLength(int $augmentationLength)
     {
         $this->augmentationLength = $augmentationLength;
     }
 
-    public function getAugmentationLength()
+    /**
+     * @return int
+     */
+    public function getAugmentationLength(): int
     {
         return $this->augmentationLength;
     }
 
-    public function setAugmentationData($augmentationData)
+    /**
+     * @param int $augmentationData
+     */
+    public function setAugmentationData(int $augmentationData)
     {
         $this->augmentationData = $augmentationData;
     }
 
-    public function getAugmentationData()
+    /**
+     * @return int
+     */
+    public function getAugmentationData(): int
     {
         return $this->augmentationData;
     }
 
-    public function setInitialInstructions($initialInstructions)
+    /**
+     * @param int $initialInstructions
+     */
+    public function setInitialInstructions(int $initialInstructions)
     {
         $this->initialInstructions = $initialInstructions;
     }
 
-    public function getInitialInstructions()
+    /**
+     * @return int
+     */
+    public function getInitialInstructions(): int
     {
         return $this->initialInstructions;
     }
 
-    public function setPadding($padding)
+    /**
+     * @param string $padding
+     */
+    public function setPadding(string $padding)
     {
         $this->padding = $padding;
     }
 
-    public function getPadding()
+    /**
+     * @return string
+     */
+    public function getPadding(): string
     {
         return $this->padding;
     }

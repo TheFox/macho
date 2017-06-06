@@ -13,18 +13,21 @@ class EhFrameHdrRecord
      * @var int
      */
     private $extLength;
-    
-    // @todo
+
+    /**
+     * @var int
+     */
     private $cieId;
-    private $version;
-    private $augmentationString;
-    private $ehData;
-    private $codeAlignmentFactor;
-    private $dataAlignmentFactor;
-    private $augmentationLength;
-    private $augmentationData;
-    private $initialInstructions;
-    private $padding;
+
+//    private $version;
+//    private $augmentationString;
+//    private $ehData;
+//    private $codeAlignmentFactor;
+//    private $dataAlignmentFactor;
+//    private $augmentationLength;
+//    private $augmentationData;
+//    private $initialInstructions;
+//    private $padding;
 
     /**
      * @param int $length
@@ -58,12 +61,18 @@ class EhFrameHdrRecord
         return $this->extLength;
     }
 
-    public function setCieId($cieId)
+    /**
+     * @param int $cieId
+     */
+    public function setCieId(int $cieId)
     {
         $this->cieId = $cieId;
     }
 
-    public function getCieId()
+    /**
+     * @return int
+     */
+    public function getCieId(): int
     {
         return $this->cieId;
     }
