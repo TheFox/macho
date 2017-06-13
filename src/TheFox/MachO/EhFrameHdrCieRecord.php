@@ -146,17 +146,17 @@ class EhFrameHdrCieRecord extends EhFrameHdrRecord
     }
 
     /**
-     * @param int $augmentationData
+     * @param string $augmentationData
      */
-    public function setAugmentationData(int $augmentationData)
+    public function setAugmentationData(string $augmentationData)
     {
         $this->augmentationData = $augmentationData;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getAugmentationData(): int
+    public function getAugmentationData(): string
     {
         return $this->augmentationData;
     }

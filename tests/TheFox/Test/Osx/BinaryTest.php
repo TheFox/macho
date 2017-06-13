@@ -128,8 +128,8 @@ class BinaryTest extends PHPUnit_Framework_TestCase
     public function testSetExpectedMd5sum()
     {
         $binary = new Binary('tmp/test_data/test_prog');
-        $binary->setExpectedMd5sum(25);
+        $binary->setExpectedMd5sum('xyz');
 
-        $this->assertEquals(25, $binary->getExpectedMd5sum());
+        $this->assertEquals('xyz', $binary->getExpectedMd5sum());
     }
 }

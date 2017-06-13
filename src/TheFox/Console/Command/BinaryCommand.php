@@ -2,7 +2,7 @@
 
 namespace TheFox\Console\Command;
 
-//use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,24 +12,8 @@ use TheFox\MachO\Binary;
 use TheFox\MachO\LoadCommandSegment;
 use TheFox\MachO\LoadCommandEntryPoint;
 
-class BinaryCommand extends BasicCommand
+class BinaryCommand extends Command
 {
-    /**
-     * @return string
-     */
-    public function getLogfilePath(): string
-    {
-        return 'log/binary.log';
-    }
-
-    /**
-     * @return string
-     */
-    public function getPidfilePath(): string
-    {
-        return 'pid/binary.pid';
-    }
-
     protected function configure()
     {
         $this->setName('binary');
@@ -113,43 +97,5 @@ class BinaryCommand extends BasicCommand
         }
 
         return 0;
-    }
-
-    /**
-     * @param int $signal
-     */
-    public function signalHandler(int $signal)
-    {
-        $this->exit++;
-
-        switch ($signal) {
-            case SIGTERM:
-                $this->logger->notice('signal: SIGTERM');
-                break;
-            case SIGINT:
-                print PHP_EOL;
-                $this->logger->notice('signal: SIGINT');
-                break;
-            case SIGHUP:
-                $this->logger->notice('signal: SIGHUP');
-                break;
-            case SIGQUIT:
-                $this->logger->notice('signal: SIGQUIT');
-                break;
-            case SIGKILL:
-                $this->logger->notice('signal: SIGKILL');
-                break;
-            case SIGUSR1:
-                $this->logger->notice('signal: SIGUSR1');
-                break;
-            default:
-                $this->logger->notice('signal: N/A');
-        }
-
-        $this->logger->notice('main abort [' . $this->exit . ']');
-
-        if ($this->exit >= 2) {
-            exit(1);
-        }
     }
 }
