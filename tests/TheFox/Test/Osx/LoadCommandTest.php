@@ -2,11 +2,11 @@
 
 namespace TheFox\Test\Osx;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TheFox\MachO\LoadCommand;
 use TheFox\MachO\Binary;
 
-class LoadCommandTest extends PHPUnit_Framework_TestCase
+class LoadCommandTest extends TestCase
 {
     public function testSetCmd()
     {

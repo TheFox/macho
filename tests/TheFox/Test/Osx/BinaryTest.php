@@ -3,10 +3,10 @@
 namespace TheFox\Test\Osx;
 
 use RuntimeException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TheFox\MachO\Binary;
 
-class BinaryTest extends PHPUnit_Framework_TestCase
+class BinaryTest extends TestCase
 {
     /**
      * @expectedException RuntimeException
@@ -34,7 +34,6 @@ class BinaryTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructRuntimeException20()
     {
-        #\Doctrine\Common\Util\Debug::dump(getcwd());
         $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedFileSize(24);
         $binary->analyze();
@@ -65,6 +64,8 @@ class BinaryTest extends PHPUnit_Framework_TestCase
     {
         $binary = new Binary('tmp/test_data/test_prog');
         $binary->analyze();
+        
+        $this->assertTrue(true);
     }
 
     public function testGetPath()

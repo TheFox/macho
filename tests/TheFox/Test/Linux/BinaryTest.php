@@ -14,7 +14,6 @@ class BinaryTest extends BinaryOsxTest
      */
     public function testConstructRuntimeException20()
     {
-        #\Doctrine\Common\Util\Debug::dump(getcwd());
         $binary = new Binary('tmp/test_data/test_prog');
         $binary->setExpectedFileSize(24);
         $binary->analyze();

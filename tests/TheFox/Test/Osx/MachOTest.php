@@ -2,10 +2,10 @@
 
 namespace TheFox\Test\Osx;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TheFox\MachO\MachO;
 
-class MachOTest extends PHPUnit_Framework_TestCase
+class MachOTest extends TestCase
 {
     public function testBasic()
     {

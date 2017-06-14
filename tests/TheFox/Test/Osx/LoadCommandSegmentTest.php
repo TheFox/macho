@@ -2,11 +2,11 @@
 
 namespace TheFox\Test\Osx;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TheFox\MachO\LoadCommandSegment;
 use TheFox\MachO\LoadSection;
 
-class LoadCommandSegmentTest extends PHPUnit_Framework_TestCase
+class LoadCommandSegmentTest extends TestCase
 {
     public function testToString()
     {

@@ -2,10 +2,10 @@
 
 namespace TheFox\Test\Osx;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TheFox\MachO\LoadCommandEntryPoint;
 
-class LoadCommandEntryPointTest extends PHPUnit_Framework_TestCase
+class LoadCommandEntryPointTest extends TestCase
 {
     public function testToString()
     {
