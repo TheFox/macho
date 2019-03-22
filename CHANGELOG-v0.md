@@ -25,7 +25,3 @@
 
 - Use Utilities 1.9.
 - Use Assembly 0.2.
-
-## v0.2.0
-
-## v0.1.0
