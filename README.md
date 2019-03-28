@@ -22,13 +22,13 @@ $ composer require thefox/macho
 To print general informations about a binary executable you can type the following command into your shell:
 
 ```bash
-$ ./application.php binary --all PATH
+$ ./macho binary --all PATH
 ```
 
 For example:
 
 ```bash
-$ ./application.php binary --all
+$ ./macho binary --all
 ```
 
 Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.

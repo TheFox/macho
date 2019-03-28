@@ -56,7 +56,7 @@ class BinaryTest extends TestCase
      */
     public function testConstructRuntimeException30()
     {
-        $binary = new Binary('application.php');
+        $binary = new Binary('macho');
         $binary->analyze();
     }
 
