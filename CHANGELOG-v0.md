@@ -1,5 +1,10 @@
 # Release Notes for MachO v0.x
 
+## v0.6.0 [unreleased]
+
+- MIT License
+- Remove Travis CI support.
+
 ## v0.5.0
 
 - PSR1/PSR2
