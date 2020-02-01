@@ -14,7 +14,7 @@ The project outlines as described in my blog post about [Open Source Software Co
 The preferred method of installation is via [Packagist](https://packagist.org/packages/thefox/macho) and [Composer](https://getcomposer.org/). Run the following command to install the package and add it as a requirement to composer.json:
 
 ```bash
-$ composer require thefox/macho
+composer require thefox/macho
 ```
 
 ## Usage
@@ -22,13 +22,13 @@ $ composer require thefox/macho
 To print general informations about a binary executable you can type the following command into your shell:
 
 ```bash
-$ ./macho binary --all PATH
+./macho binary --all PATH
 ```
 
 For example:
 
 ```bash
-$ ./macho binary --all
+./macho binary --all
 ```
 
 Another way to print general informations about a binary executable is to use `dbg.sh` script. This script uses default OS X tools like `nm` and `otool`.
